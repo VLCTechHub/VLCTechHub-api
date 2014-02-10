@@ -1,4 +1,5 @@
 require 'grape'
+require 'grape-entity'
 require 'json'
 require 'mongo'
 
