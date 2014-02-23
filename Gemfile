@@ -10,5 +10,6 @@ gem 'mongo'
 gem 'bson_ext'
 
 group :development, :test do
+  gem 'rspec'
   gem 'rack-test'
 end
