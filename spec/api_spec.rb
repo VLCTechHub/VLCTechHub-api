@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'time'
 require_relative '../api'
 
 describe VLCTechHub::API do
@@ -6,11 +7,20 @@ describe VLCTechHub::API do
     VLCTechHub::API
   end
 
-  describe "GET /v0/events" do
-    it "returns a list of events" do
-      get "/v0/events"
+  describe "GET /v0/events/upcoming" do
+    it "returns a list of future events" do
+      request_time = Time.now.utc
+      get "/v0/events/upcoming"
       last_response.status.should == 200
-      JSON.parse(last_response.body).should_not == []
+      JSON.parse(last_response.body).select { |e| e['date'] < request_time }.should == [] if  JSON.parse(last_response.body) != []
+    end
+  end
+  describe "GET /v0/events/past" do
+    it "returns a list of past events" do
+      request_time = Time.now.utc
+      get "/v0/events/past"
+      last_response.status.should == 200
+      JSON.parse(last_response.body).select { |e| e['date'] >= request_time }.should == [] if  JSON.parse(last_response.body) != []
     end
   end
   describe "GET /v0/events/:id" do

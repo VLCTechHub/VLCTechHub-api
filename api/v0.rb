@@ -8,8 +8,14 @@ module VLCTechHub
       ## Events
       resource 'events' do
         desc 'Retrieve future scheduled events'
-        get do
-          events = db['events'].find( { sentMail: true, date: { :$gt => Time.now.utc } } )
+        get 'upcoming' do
+          events = db['events'].find( { sentMail: true, date: { :$gte => Time.now.utc } } )
+          present events.to_a, with: Event
+        end
+
+        desc 'Retrieve past events'
+        get 'past' do
+          events = db['events'].find( { sentMail: true, date: { :$lt => Time.now.utc } } )
           present events.to_a, with: Event
         end
 
