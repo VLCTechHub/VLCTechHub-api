@@ -20,6 +20,29 @@ namespace :server do
   end
 end
 
+namespace :mongo do
+  desc "Update data from master database"
+  task :update => :dotenv do
+    require 'uri'
+    require 'time'
+    require 'mongo'
+    # connect to source and target instances
+    source = Mongo::MongoClient.from_uri(ENV['MASTER_MONGODB_URI'])
+    target = Mongo::MongoClient.from_uri(ENV['MONGODB_URI'])
+    # drop existing target
+    target.db['events'].drop
+    # copy the source into the target and update event dates to include event times
+    source.db['events'].find.each do |event|
+      date = event['date'].to_s
+      time = event['time']
+      date[11..18] = time
+      date[-3..-1] = "CET"
+      event['date'] = Time.parse(date).utc
+      target.db['events'].insert(event)
+    end
+  end
+end
+
 namespace :test do
   desc "Prepare test environment"
   task :prepare => :dotenv do
