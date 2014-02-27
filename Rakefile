@@ -33,11 +33,9 @@ namespace :mongo do
     target.db['events'].drop
     # copy the source into the target and update event dates to include event times
     source.db['events'].find.each do |event|
-      date = event['date'].to_s
+      date = event['date'].to_s[0..9]
       time = event['time']
-      date[11..18] = time
-      date[-3..-1] = "CET"
-      event['date'] = Time.parse(date).utc
+      event['date'] = Time.parse("#{date} #{time} +0100").utc
       target.db['events'].insert(event)
     end
   end
