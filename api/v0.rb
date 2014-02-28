@@ -9,13 +9,13 @@ module VLCTechHub
       resource 'events' do
         desc 'Retrieve future scheduled events'
         get 'upcoming' do
-          events = db['events'].find( { sentMail: true, date: { :$gte => Time.now.utc } } )
+          events = db['events'].find( { sentMail: true, date: { :$gte => Time.now.utc } } ).sort( { date: 1 } )
           present events.to_a, with: Event
         end
 
         desc 'Retrieve past events'
         get 'past' do
-          events = db['events'].find( { sentMail: true, date: { :$lt => Time.now.utc } } )
+          events = db['events'].find( { sentMail: true, date: { :$lt => Time.now.utc } } ).sort( {date: -1} )
           present events.to_a, with: Event
         end
 
