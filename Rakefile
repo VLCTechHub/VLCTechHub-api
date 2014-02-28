@@ -2,13 +2,17 @@ require 'dotenv/tasks'
 
 task :default => :'server:up'
 
+desc "Start API server"
 task :start => :'server:up'
+
+desc "Stop API server"
 task :stop => :'server:down'
 
+desc "Run spec tests"
 task :test => :'test:spec'
 
 namespace :server do
-  desc "Run API server"
+  #desc "Start API server"
   task :up => :dotenv do
     trap ("SIGINT") do
       puts "\r\e[0KStopping ..."
@@ -17,7 +21,7 @@ namespace :server do
     system "bundle exec rackup -p $PORT -E $RACK_ENV"
   end
 
-  desc "Stop API server"
+  #desc "Stop API server"
   task :down do
     system "pkill -9 -f rackup"
   end
@@ -45,12 +49,12 @@ namespace :mongo do
 end
 
 namespace :test do
-  desc "Prepare test environment"
+  #desc "Prepare test environment"
   task :prepare => :dotenv do
     ENV['RACK_ENV'] = 'test'
     puts "Ensure the target database is up and running ..."
   end
-  desc "Run spec tests"
+  #desc "Run spec tests"
   task :spec => :'test:prepare' do
     system "bundle exec rspec --color --format progress"
   end
