@@ -56,6 +56,9 @@ namespace :mongo do
       event['date'] = Time.parse("#{date} #{time} +0100").utc
       target.db['events'].insert(event)
     end
+    # ensure indexes
+    target.db['events'].ensure_index( { date: 1 } )
+    target.db['events'].ensure_index( { date: -1 } )
   end
 end
 
