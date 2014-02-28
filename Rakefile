@@ -1,4 +1,5 @@
 require 'dotenv/tasks'
+require './config/environment'
 
 task :default => :'server:up'
 
@@ -7,6 +8,9 @@ task :start => :'server:up'
 
 desc "Stop API server"
 task :stop => :'server:down'
+
+desc "Connect to database console"
+task :mongo => :'mongo:connect'
 
 desc "Run spec tests"
 task :test => :'test:spec'
@@ -20,7 +24,6 @@ namespace :server do
     end
     system "bundle exec rackup -p $PORT -E $RACK_ENV"
   end
-
   #desc "Stop API server"
   task :down do
     system "pkill -9 -f rackup"
@@ -28,9 +31,17 @@ namespace :server do
 end
 
 namespace :mongo do
+  #desc "Connect to database shell"
+  task :connect => :dotenv do
+    require 'uri'
+    uri = URI.parse(ENV['MONGODB_URI'])
+    username = uri.user ? "-u #{uri.user}" : ""
+    password = uri.password ? "-p #{uri.password}" : ""
+    system "mongo #{username} #{password} #{uri.host}:#{uri.port}#{uri.path}"
+  end
+
   desc "Update data from master database"
   task :update => :dotenv do
-    require 'uri'
     require 'time'
     require 'mongo'
     # connect to source and target instances
@@ -54,6 +65,7 @@ namespace :test do
     ENV['RACK_ENV'] = 'test'
     puts "Ensure the target database is up and running ..."
   end
+
   #desc "Run spec tests"
   task :spec => :'test:prepare' do
     system "bundle exec rspec --color --format progress"
