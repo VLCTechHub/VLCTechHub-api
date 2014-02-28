@@ -2,6 +2,9 @@ require 'dotenv/tasks'
 
 task :default => :'server:up'
 
+task :start => :'server:up'
+task :stop => :'server:down'
+
 task :test => :'test:spec'
 
 namespace :server do
