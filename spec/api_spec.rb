@@ -23,6 +23,16 @@ describe VLCTechHub::API do
       JSON.parse(last_response.body).select { |e| e['date'] >= request_time }.should == [] if  JSON.parse(last_response.body) != []
     end
   end
+  describe "GET /v0/events/year/month" do
+    it "returns a list of events for that year and month" do
+      month = DateTime.new(2014, 02, 01)
+      next_month = DateTime.new(2014, 03, 01)
+      get "/v0/events/2014/02"
+      last_response.status.should == 200
+      JSON.parse(last_response.body).should_not == []
+      JSON.parse(last_response.body).select { |e| (e['date'] < month  || e['date'] > next_month) }.should == [] 
+    end
+  end
   describe "GET /v0/events/:id" do
     it "returns an event by id" do
       get "/v0/events/52efbf75a1aac70200000001"

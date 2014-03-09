@@ -1,4 +1,5 @@
 require 'time'
+require 'date'
 
 module VLCTechHub
   class API < Grape::API
@@ -13,9 +14,17 @@ module VLCTechHub
           present events.to_a, with: Event
         end
 
-        desc 'Retrieve past events'
+        desc 'Retrieve latest 10 past events'
         get 'past' do
-          events = db['events'].find( { sentMail: true, date: { :$lt => Time.now.utc } } ).sort( {date: -1} )
+          events = db['events'].find( { sentMail: true, date: { :$lt => Time.now.utc } }).sort( {date: -1} ).limit(10)
+          present events.to_a, with: Event
+        end
+
+        desc 'Retrieve events by year and month'
+        get ':year/:month' do
+          month = DateTime.new(params[:year].to_i, params[:month].to_i, 1)
+          next_month = (month >> 1)
+          events = db['events'].find( { sentMail: true, date: { :$gte => month.to_time.utc , :$lt => next_month.to_time.utc } }).sort( {date: -1} )
           present events.to_a, with: Event
         end
 
