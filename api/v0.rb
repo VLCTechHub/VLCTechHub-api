@@ -33,6 +33,27 @@ module VLCTechHub
           event = db['events'].find_one( {_id: BSON::ObjectId(params[:id])} )
           present event, with: Event
         end
+
+        desc 'Create new event'
+        params do
+          requires :title, type: String,  regexp: /.+/, desc: "The title of the event."
+          requires :description, type: String, regexp: /.+/, desc: "The description of the event."
+          requires :link, type: String, regexp: /.+/, desc: "The link to the published post outside VLCTechHub."
+          requires :date, type: DateTime, regexp: /.+/, desc: "Starting date and time of the event."
+        end
+        post 'new' do
+          newEvent = {
+            title: params[:title],
+            description: params[:description],
+            link: params[:link],
+            date: params[:date].iso8601,
+            sentMail: false
+          }
+
+          ##puts newEvent
+          db['events'].insert(newEvent)
+
+        end
       end
 
       class Event < Grape::Entity
