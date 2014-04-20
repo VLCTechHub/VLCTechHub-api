@@ -39,11 +39,16 @@ GEM
     hashie (2.0.5)
     i18n (0.6.9)
     ice_nine (0.11.0)
+    mail (2.5.4)
+      mime-types (~> 1.16)
+      treetop (~> 1.4.8)
+    mime-types (1.25.1)
     minitest (4.7.5)
     mongo (1.9.2)
       bson (~> 1.9.2)
     multi_json (1.8.4)
     multi_xml (0.5.5)
+    polyglot (0.3.4)
     rack (1.5.2)
     rack-accept (0.4.5)
       rack (>= 0.4)
@@ -66,6 +71,9 @@ GEM
       rack (>= 1.0.0)
     thread_safe (0.2.0)
       atomic (>= 1.1.7, < 2)
+    treetop (1.4.15)
+      polyglot
+      polyglot (>= 0.3.1)
     tzinfo (0.3.38)
     virtus (1.0.1)
       axiom-types (~> 0.0.5)
@@ -81,6 +89,7 @@ DEPENDENCIES
   dotenv
   grape
   grape-entity
+  mail
   mongo
   rack
   rack-cors
