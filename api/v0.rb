@@ -1,9 +1,9 @@
 require 'time'
 require 'date'
-require 'mail'
-
+require 'securerandom'
 
 require_relative './event'
+require_relative './mail'
 
 module VLCTechHub
   class API < Grape::API
@@ -43,40 +43,31 @@ module VLCTechHub
           requires :title, type: String,  regexp: /.+/, desc: "The title of the event."
           requires :description, type: String, regexp: /.+/, desc: "The description of the event."
           requires :link, type: String, regexp: /.+/, desc: "The link to the published post outside VLCTechHub."
-          requires :date, type: DateTime, regexp: /.+/, desc: "Starting date and time of the event."
+          requires :date, type: Time, regexp: /.+/, desc: "Starting date and time of the event."
         end
         post 'new' do
           newEvent = {
             title: params[:title],
             description: params[:description],
             link: params[:link],
-            date: params[:date].iso8601,
-            published: false
+            date: params[:date].utc,
+            published: false,
+            publish_id: SecureRandom.uuid
           }
 
-          Mail.defaults do
-            delivery_method :smtp, {
-              :address => 'smtp.sendgrid.net',
-              :port => '587',
-              :domain => 'heroku.com',
-              :user_name => ENV['SENDGRID_USERNAME'],
-              :password => ENV['SENDGRID_PASSWORD'],
-              :authentication => :plain,
-              :enable_starttls_auto => true
-            }
-          end
+          db['events'].insert(newEvent)
 
-          Mail.deliver do
-            to 'eraseunavez@egmail.com'
-            from 'vlctechhub@gmail.com'
-            subject 'testing send mail'
-            body 'Sending email with Ruby through SendGrid!'
-          end
+          VLCTechHub.send_mail_for_publication newEvent
 
-          puts newEvent
+          newEvent
+        end
+      end
 
-          ##db['events'].insert(newEvent)
-
+      resource 'publish' do
+        desc 'Activate publication from a link in a mail'
+        get ':uuid' do
+           result = db['events'].update(  { published: false, publish_id: params[:uuid] },
+                                          { "$set" => { published: true } } )
         end
       end
     end
