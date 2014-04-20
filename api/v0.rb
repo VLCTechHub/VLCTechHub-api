@@ -1,7 +1,8 @@
 require 'time'
 require 'date'
+require 'mail'
 
-require_relative './mail'
+
 require_relative './event'
 
 module VLCTechHub
@@ -53,7 +54,27 @@ module VLCTechHub
             published: false
           }
 
+          Mail.defaults do
+            delivery_method :smtp, {
+              :address => 'smtp.sendgrid.net',
+              :port => '587',
+              :domain => 'heroku.com',
+              :user_name => ENV['SENDGRID_USERNAME'],
+              :password => ENV['SENDGRID_PASSWORD'],
+              :authentication => :plain,
+              :enable_starttls_auto => true
+            }
+          end
+
+          Mail.deliver do
+            to 'eraseunavez@egmail.com'
+            from 'vlctechhub@gmail.com'
+            subject 'testing send mail'
+            body 'Sending email with Ruby through SendGrid!'
+          end
+
           puts newEvent
+
           ##db['events'].insert(newEvent)
 
         end
