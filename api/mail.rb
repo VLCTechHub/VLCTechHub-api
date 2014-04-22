@@ -1,9 +1,12 @@
 require 'mail'
+require 'tzinfo'
 
 module VLCTechHub
   	def self.send_mail_for_publication event
 
-  		date = event[:date].utc - Time.zone_offset("+01:00")
+  		zone = TZInfo::Timezone.get('Europe/Madrid')
+  		date = zone.utc_to_local(event[:date].utc)
+  		fmt_date = date.strftime "%Y-%m-%d %H:%M:%S"
 
   		Mail.deliver do
     		to ENV['EMAIL_FOR_PUBLICATION']
@@ -14,7 +17,7 @@ module VLCTechHub
 		    	content_type 'text/html; charset=UTF-8'
 		    	body "<h1>#{event[:title]}</h1>" +
 		    		  "<pre>#{event[:description]}</pre>" +
-		    		  "<h3>#{date.strftime "%Y-%m-%d %H:%M:%S"}</h3>" +
+		    		  "<h3>#{fmt_date}</h3>" +
 		    		  "<p>Link: <a href='#{event[:link]}'>#{event[:link]}</a></p>" +
 		    		  "<p>Publicar: <a href='http://api.vlctechhub.org/v0/publish/#{event[:publish_id]}'>http://api.vlctechhub.org/v0/publish/#{event[:publish_id]}</a></p>"
 		  	end
