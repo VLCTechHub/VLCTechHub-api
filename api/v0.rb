@@ -60,6 +60,9 @@ module VLCTechHub
           VLCTechHub.send_mail_for_publication newEvent
 
           newEvent
+
+          #TODO: How to use the preseter for the newEvent hash object?
+
         end
       end
 
