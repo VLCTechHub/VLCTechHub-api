@@ -54,7 +54,7 @@ namespace :mongo do
     source.db['events'].find.each do |event|
       date = event['date'].to_s[0..9]
       time = event['time']
-      event['date'] = Time.parse("#{date} #{time} +0100").utc
+      event['date'] = Time.parse("#{date} #{time} +0200").utc
       event['published'] = event['sentMail']
       target.db['events'].insert(event.except('time', 'created_at'))
     end
