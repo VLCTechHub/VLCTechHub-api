@@ -55,22 +55,24 @@ module VLCTechHub
             publish_id: SecureRandom.uuid
           }
 
-          db['events'].insert(newEvent)
-
-          VLCTechHub.send_mail_for_publication newEvent
-
-          newEvent
-
-          #TODO: How to use the preseter for the newEvent hash object?
-
+          id = db['events'].insert(newEvent)
+          event = db['events'].find_one( {_id: id} )
+          VLCTechHub.send_mail_for_publication event
+          present event, with: Event
         end
       end
 
       resource 'publish' do
-        desc 'Activate publication from a link in a mail'
+        desc 'Activate publication from a link in a mail and broadcast it'
         get ':uuid' do
-           result = db['events'].update(  { published: false, publish_id: params[:uuid] },
+            result = db['events'].update(  { published: false, publish_id: params[:uuid] },
                                           { "$set" => { published: true } } )
+            was_updated = (result['n'] == 1)
+            error!('404 Not found', 404) unless was_updated
+
+            event = db['events'].find_one( {publish_id: params[:uuid]} )
+            VLCTechHub.send_mail_to_broadcast_list event
+            present event, with: Event
         end
       end
     end
