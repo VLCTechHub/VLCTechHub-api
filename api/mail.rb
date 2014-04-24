@@ -38,7 +38,7 @@ module VLCTechHub
       Mail.deliver do
         to ENV['EMAIL_FOR_BROADCAST']
         from 'VLCTechHub <vlctechhub@gmail.com>'
-        subject "[VLCTECHHUB] Nuevo evento: #{event['title']}"
+        subject "Nuevo evento: #{event['title']} #{fmt_date}"
 
         html_part do
           content_type 'text/html; charset=UTF-8'
