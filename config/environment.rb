@@ -1,3 +1,4 @@
+require 'newrelic_rpm'
 require 'mail'
 
 Mail.defaults do
