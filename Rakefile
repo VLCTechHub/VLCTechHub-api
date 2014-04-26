@@ -12,6 +12,9 @@ task :stop => :'server:down'
 desc "Connect to database console"
 task :mongo => :'mongo:connect'
 
+desc "Tweet events scheduled today"
+task :tweet => :'twitter:tweet'
+
 desc "Run spec tests"
 task :test => :'test:spec'
 
@@ -61,6 +64,25 @@ namespace :mongo do
     # ensure indexes
     target.db['events'].ensure_index( { date: 1 } )
     target.db['events'].ensure_index( { date: -1 } )
+  end
+end
+
+namespace :twitter do
+  #dec "Tweet events scheduled today"
+  task :tweet => :dotenv do
+    require 'mongo'
+    require 'twitter'
+    require 'active_support/core_ext'
+    db = Mongo::MongoClient.from_uri(ENV['MONGODB_URI']).db
+    twitter = Twitter::REST::Client.new do |config|
+      config.consumer_key        = ENV['TWITTER_CONSUMER_KEY']
+      config.consumer_secret     = ENV['TWITTER_CONSUMER_SECRET']
+      config.access_token        = ENV['TWITTER_ACCESS_TOKEN']
+      config.access_token_secret = ENV['TWITTER_ACCESS_SECRET']
+    end
+    today_events = db['events'].find( { published: true, date: { :$gte => Time.now.utc, :$lte => 1.day.from_now.utc.midnight } } )
+    today_tweets = today_events.map { |event| "Recordatorio: #{event['title']} hoy a las #{event['date'].in_time_zone("Madrid").strftime "%H:%M"} http://vlctechhub.org" }
+    today_tweets.each { |tweet| twitter.update(tweet) }
   end
 end
 
