@@ -45,21 +45,15 @@ namespace :mongo do
 
   desc "Update data from master database"
   task :update => :dotenv do
-    require 'time'
     require 'mongo'
-    require 'active_support'
     # connect to source and target instances
     source = Mongo::MongoClient.from_uri(ENV['MASTER_MONGODB_URI'])
     target = Mongo::MongoClient.from_uri(ENV['MONGODB_URI'])
-    # drop existing target
+    # drop existing collections in target
     target.db['events'].drop
-    # copy the source into the target, transforming data accordingly
+    # copy source into target, transforming data if necessary
     source.db['events'].find.each do |event|
-      date = event['date'].to_s[0..9]
-      time = event['time']
-      event['date'] = Time.parse("#{date} #{time} +0200").utc
-      event['published'] = event['sentMail']
-      target.db['events'].insert(event.except('time', 'created_at'))
+      target.db['events'].insert(event)
     end
     # ensure indexes
     target.db['events'].ensure_index( { date: 1 } )
