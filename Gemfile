@@ -10,6 +10,7 @@ gem 'grape-entity'
 gem 'mongo'
 gem 'bson_ext'
 gem 'mail'
+gem 'twitter'
 
 group :development, :test do
   gem 'rspec'

@@ -72,6 +72,7 @@ module VLCTechHub
 
             event = db['events'].find_one( {publish_id: params[:uuid]} )
             VLCTechHub.send_mail_to_broadcast_list event
+            twitter.update("Nuevo Evento: #{event['title']} #{event['date'].strftime "%d/%m/%Y"} http://vlctechhub.org")
             present event, with: Event
         end
       end
