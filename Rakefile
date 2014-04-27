@@ -18,6 +18,16 @@ task :tweet => :'twitter:tweet'
 desc "Run spec tests"
 task :test => :'test:spec'
 
+desc "List API routes"
+task :routes do
+  require './api'
+  VLCTechHub::API.routes.each do |endpoint|
+    method = endpoint.route_method.ljust(10)
+    path = endpoint.route_path
+    puts "\t#{method} #{path}"
+  end
+end
+
 namespace :server do
   #desc "Start API server"
   task :up => :dotenv do
