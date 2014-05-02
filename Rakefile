@@ -85,7 +85,7 @@ namespace :twitter do
       config.access_token_secret = ENV['TWITTER_ACCESS_SECRET']
     end
     today_events = db['events'].find( { published: true, date: { :$gte => Time.now.utc, :$lte => 1.day.from_now.utc.midnight } } )
-    today_tweets = today_events.map { |event| "Recordatorio: #{event['title']} hoy a las #{event['date'].in_time_zone("Madrid").strftime "%H:%M"} http://vlctechhub.org" }
+    today_tweets = today_events.map { |event| "Hoy a las #{event['date'].in_time_zone("Madrid").strftime "%H:%M"}: #{event['title']} http://vlctechhub.org" }
     today_tweets.each { |tweet| twitter.update(tweet) }
   end
 end
