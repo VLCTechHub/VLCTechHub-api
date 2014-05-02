@@ -13,6 +13,7 @@ gem 'mail'
 gem 'twitter'
 
 group :development, :test do
+  gem 'pry'
   gem 'rspec'
   gem 'rack-test'
 end
