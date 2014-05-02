@@ -2,6 +2,7 @@ require 'grape'
 require 'grape-entity'
 require 'json'
 require 'mongo'
+require 'twitter'
 
 require_relative 'api/v0'
 
