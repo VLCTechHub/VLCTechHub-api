@@ -30,7 +30,20 @@ describe VLCTechHub::API do
       get "/v0/events/2014/02"
       last_response.status.should == 200
       JSON.parse(last_response.body).should_not == []
-      JSON.parse(last_response.body).select { |e| (e['date'] < month  || e['date'] > next_month) }.should == [] 
+      JSON.parse(last_response.body).select { |e| (e['date'] < month  || e['date'] > next_month) }.should == []
+    end
+    it "returns error if invalid year or month" do
+      get "/v0/events/0014/01"
+      last_response.status.should == 400
+      last_response.body =~ /invalid/
+      get "/v0/events/2014/00"
+      last_response.status.should == 400
+    end
+    it "returns not found if year or month are bad formatted" do
+      get "/v0/events/20140/01"
+      last_response.status.should == 404
+      get "/v0/events/2014/001"
+      last_response.status.should == 404
     end
   end
   describe "GET /v0/events/:id" do

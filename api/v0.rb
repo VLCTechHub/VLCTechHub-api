@@ -25,7 +25,11 @@ module VLCTechHub
         end
 
         desc 'Retrieve events by year and month'
-        get ':year/:month' do
+        params do
+          requires :year, type: String, regexp: /20\d\d/, desc: "Year"
+          requires :month, type: String, regexp: /0[1-9]|1[012]/, desc: "Month"
+        end
+        get ':year/:month', requirements: { year: /\d{4}/, month: /\d{2}/ } do
           month = DateTime.new(params[:year].to_i, params[:month].to_i, 1)
           next_month = (month >> 1)
           events = db['events'].find( { published: true, date: { :$gte => month.to_time.utc , :$lt => next_month.to_time.utc } }).sort( {date: -1} )
