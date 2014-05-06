@@ -32,5 +32,9 @@ module VLCTechHub
     end
 
     mount VLCTechHub::API::V0
+
+    route :any, '*path' do
+      error!('404 Not found', 404)
+    end
   end
 end
