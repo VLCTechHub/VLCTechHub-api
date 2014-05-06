@@ -55,6 +55,7 @@ namespace :mongo do
 
   desc "Update data from master database"
   task :update => :dotenv do
+    abort "Not to be run in production!!" if ENV['RACK_ENV'] == "production"
     require 'mongo'
     # connect to source and target instances
     source = Mongo::MongoClient.from_uri(ENV['MASTER_MONGODB_URI'])
