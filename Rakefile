@@ -12,8 +12,21 @@ task :stop => :'server:down'
 desc "Connect to database console"
 task :mongo => :'mongo:connect'
 
+desc "Tweet events scheduled today"
+task :tweet => :'twitter:tweet'
+
 desc "Run spec tests"
 task :test => :'test:spec'
+
+desc "List API routes"
+task :routes do
+  require './api'
+  VLCTechHub::API.routes.each do |endpoint|
+    method = endpoint.route_method.ljust(10)
+    path = endpoint.route_path
+    puts "\t#{method} #{path}"
+  end
+end
 
 namespace :server do
   #desc "Start API server"
@@ -42,25 +55,39 @@ namespace :mongo do
 
   desc "Update data from master database"
   task :update => :dotenv do
-    require 'time'
+    abort "Not to be run in production!!" if ENV['RACK_ENV'] == "production"
     require 'mongo'
-    require 'active_support'
     # connect to source and target instances
     source = Mongo::MongoClient.from_uri(ENV['MASTER_MONGODB_URI'])
     target = Mongo::MongoClient.from_uri(ENV['MONGODB_URI'])
-    # drop existing target
+    # drop existing collections in target
     target.db['events'].drop
-    # copy the source into the target, transforming data accordingly
+    # copy source into target, transforming data if necessary
     source.db['events'].find.each do |event|
-      date = event['date'].to_s[0..9]
-      time = event['time']
-      event['date'] = Time.parse("#{date} #{time} +0100").utc
-      event['published'] = event['sentMail']
-      target.db['events'].insert(event.except('time', 'created_at'))
+      target.db['events'].insert(event)
     end
     # ensure indexes
     target.db['events'].ensure_index( { date: 1 } )
     target.db['events'].ensure_index( { date: -1 } )
+  end
+end
+
+namespace :twitter do
+  #dec "Tweet events scheduled today"
+  task :tweet => :dotenv do
+    require 'mongo'
+    require 'twitter'
+    require 'active_support/core_ext'
+    db = Mongo::MongoClient.from_uri(ENV['MONGODB_URI']).db
+    twitter = Twitter::REST::Client.new do |config|
+      config.consumer_key        = ENV['TWITTER_CONSUMER_KEY']
+      config.consumer_secret     = ENV['TWITTER_CONSUMER_SECRET']
+      config.access_token        = ENV['TWITTER_ACCESS_TOKEN']
+      config.access_token_secret = ENV['TWITTER_ACCESS_SECRET']
+    end
+    today_events = db['events'].find( { published: true, date: { :$gte => Time.now.utc, :$lte => 1.day.from_now.utc.midnight } } )
+    today_tweets = today_events.map { |event| "Hoy a las #{event['date'].in_time_zone("Madrid").strftime "%H:%M"}: #{event['title']} http://vlctechhub.org" }
+    today_tweets.each { |tweet| twitter.update(tweet) }
   end
 end
 
