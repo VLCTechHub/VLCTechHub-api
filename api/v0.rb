@@ -1,26 +1,38 @@
+$:.unshift File.dirname(__FILE__)
 require 'time'
 require 'date'
 require 'securerandom'
 
-require_relative './event'
-require_relative './mail'
+require 'event'
 
 module VLCTechHub
   class API < Grape::API
     class V0 < Grape::API
       version 'v0', using: :path
 
+      helpers do
+        def get_hashtag
+          hashtag = params[:hashtag] || ''
+          hashtag = hashtag.strip.split[0] || ''
+          return hashtag if hashtag.empty?
+          if !hashtag.start_with?('#') && !hashtag.start_with?('@')
+            hashtag = '#' << hashtag
+          end
+          hashtag
+        end
+      end
+
       ## Events
       resource 'events' do
         desc 'Retrieve future scheduled events'
         get 'upcoming' do
-          events = db['events'].find( { published: true, date: { :$gte => Time.now.utc } } ).sort( { date: 1 } )
+          events = repo.find_future_events
           present events.to_a, with: Event
         end
 
         desc 'Retrieve latest 10 past events'
         get 'past' do
-          events = db['events'].find( { published: true, date: { :$lt => Time.now.utc } }).sort( {date: -1} ).limit(10)
+          events = repo.find_latest_events
           present events.to_a, with: Event
         end
 
@@ -30,15 +42,13 @@ module VLCTechHub
           requires :month, type: String, regexp: /0[1-9]|1[012]/, desc: "Month"
         end
         get ':year/:month', requirements: { year: /\d{4}/, month: /\d{2}/ } do
-          month = DateTime.new(params[:year].to_i, params[:month].to_i, 1)
-          next_month = (month >> 1)
-          events = db['events'].find( { published: true, date: { :$gte => month.to_time.utc , :$lt => next_month.to_time.utc } }).sort( {date: -1} )
+          events = repo.find_by_month(params[:year].to_i, params[:month].to_i)
           present events.to_a, with: Event
         end
 
         desc 'Retrieve a specific event'
         get ':id' do
-          event = db['events'].find_one( {_id: BSON::ObjectId(params[:id])} )
+          event = repo.find_by_id params[:id]
           present event, with: Event
         end
 
@@ -55,13 +65,12 @@ module VLCTechHub
             description: params[:description],
             link: params[:link],
             date: params[:date].utc,
+            hashtag: get_hashtag,
             published: false,
             publish_id: SecureRandom.uuid
           }
-
-          id = db['events'].insert(newEvent)
-          event = db['events'].find_one( {_id: id} )
-          VLCTechHub.send_mail_for_publication event
+          event = repo.insert newEvent
+          mailer.publish event
           present event, with: Event
         end
       end
@@ -69,14 +78,12 @@ module VLCTechHub
       resource 'publish' do
         desc 'Activate publication from a link in a mail and broadcast it'
         get ':uuid' do
-            result = db['events'].update(  { published: false, publish_id: params[:uuid] },
-                                          { "$set" => { published: true } } )
-            was_updated = (result['n'] == 1)
+            was_updated = repo.publish params[:uuid]
             error!('404 Not found', 404) unless was_updated
 
-            event = db['events'].find_one( {publish_id: params[:uuid]} )
-            VLCTechHub.send_mail_to_broadcast_list event
-            twitter.update("Nuevo Evento: #{event['title']} #{event['date'].strftime "%d/%m/%Y"} http://vlctechhub.org")
+            event = repo.find_by_uuid params[:uuid]
+            mailer.broadcast event
+            twitter.tweet event
             present event, with: Event
         end
       end

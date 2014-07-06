@@ -1,5 +1,7 @@
 require 'dotenv/tasks'
 require './config/environment'
+require_relative 'api/repository'
+require_relative 'api/twitter'
 
 task :default => :'server:up'
 
@@ -75,19 +77,9 @@ end
 namespace :twitter do
   #dec "Tweet events scheduled today"
   task :tweet => :dotenv do
-    require 'mongo'
-    require 'twitter'
-    require 'active_support/core_ext'
-    db = Mongo::MongoClient.from_uri(ENV['MONGODB_URI']).db
-    twitter = Twitter::REST::Client.new do |config|
-      config.consumer_key        = ENV['TWITTER_CONSUMER_KEY']
-      config.consumer_secret     = ENV['TWITTER_CONSUMER_SECRET']
-      config.access_token        = ENV['TWITTER_ACCESS_TOKEN']
-      config.access_token_secret = ENV['TWITTER_ACCESS_SECRET']
-    end
-    today_events = db['events'].find( { published: true, date: { :$gte => Time.now.utc, :$lte => 1.day.from_now.utc.midnight } } )
-    today_tweets = today_events.map { |event| "Hoy a las #{event['date'].in_time_zone("Madrid").strftime "%H:%M"}: #{event['title']} http://vlctechhub.org" }
-    today_tweets.each { |tweet| twitter.update(tweet) }
+    repo = VLCTechHub::Repository.new
+    today_events = repo.find_today_events
+    VLCTechHub::Twitter.tweet_today_events(today_events)
   end
 end
 
