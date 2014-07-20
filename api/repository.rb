@@ -27,7 +27,7 @@ module VLCTechHub
     def find_by_month(year, month)
       month = DateTime.new(year, month, 1)
       next_month = (month >> 1)
-      events = db['events'].find( { published: true, date: { :$gte => month.to_time.utc , :$lt => next_month.to_time.utc } }).sort( {date: -1} ) 
+      events = db['events'].find( { published: true, date: { :$gte => month.to_time.utc , :$lt => next_month.to_time.utc } }).sort( {date: 1} ) 
     end
 
     def insert(newEvent)
