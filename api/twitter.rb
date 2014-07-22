@@ -1,5 +1,6 @@
 require 'mongo'
 require 'twitter'
+require 'active_support'
 require 'active_support/core_ext'
 
 module VLCTechHub
