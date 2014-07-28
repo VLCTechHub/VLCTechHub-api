@@ -1,9 +1,9 @@
-$:.unshift File.dirname(__FILE__)
+#$:.unshift File.dirname(__FILE__)
 require 'time'
 require 'date'
 require 'securerandom'
 
-require 'event'
+require_relative 'event'
 
 module VLCTechHub
   class API < Grape::API

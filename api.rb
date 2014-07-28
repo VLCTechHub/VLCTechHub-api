@@ -20,7 +20,7 @@ module VLCTechHub
         VLCTechHub::Mailer
       end
       def twitter
-        VLCTechHub::Twitter
+        @twitter ||= VLCTechHub::Twitter.new
       end
     end
 
