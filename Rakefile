@@ -78,8 +78,9 @@ namespace :twitter do
   #dec "Tweet events scheduled today"
   task :tweet => :dotenv do
     repo = VLCTechHub::Repository.new
+    twitter = VLCTechHub::Twitter.new
     today_events = repo.find_today_events
-    VLCTechHub::Twitter.tweet_today_events(today_events)
+    twitter.tweet_today_events(today_events)
   end
 end
 
