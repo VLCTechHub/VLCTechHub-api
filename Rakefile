@@ -1,5 +1,6 @@
 require 'dotenv/tasks'
-require './config/environment'
+
+require_relative 'config/environment'
 require_relative 'api/repository'
 require_relative 'api/twitter'
 

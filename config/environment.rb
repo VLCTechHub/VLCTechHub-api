@@ -1,5 +1,8 @@
-require 'newrelic_rpm'
+require 'i18n'
 require 'mail'
+require 'newrelic_rpm'
+
+I18n.enforce_available_locales = false
 
 Mail.defaults do
     delivery_method :smtp, {
@@ -12,4 +15,3 @@ Mail.defaults do
       :enable_starttls_auto => true
     }
 end
-

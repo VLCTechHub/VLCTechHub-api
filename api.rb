@@ -3,6 +3,8 @@ require 'grape-entity'
 require 'json'
 require 'mongo'
 
+require_relative 'config/environment'
+
 require_relative 'api/v0'
 require_relative 'api/repository'
 require_relative 'api/twitter'
