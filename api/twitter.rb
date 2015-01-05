@@ -16,13 +16,13 @@ module VLCTechHub
     end
 
     def tweet(event)
-      tweet = "Nuevo Evento: #{self.hashtag event} #{event['title']} #{self.datetime event} http://vlctechhub.org"
+      tweet = "Nuevo Evento: #{self.hashtag event} #{event['title']} #{self.datetime event} http://vlctechhub.io"
       @client.update(tweet)
     end
 
     def tweet_today_events(today_events)
       today_events.each do |event|
-        tweet = "Hoy #{self.hashtag event}a las #{self.time event}: #{event['title']} http://vlctechhub.org"
+        tweet = "Hoy #{self.hashtag event}a las #{self.time event}: #{event['title']} http://vlctechhub.io"
         @client.update(tweet)
       end
     end
