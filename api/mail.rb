@@ -23,7 +23,7 @@ module VLCTechHub
 		    		  "<pre>#{event['description']}</pre>" +
 		    		  "<h3>#{fmt_date}</h3>" +
 		    		  "<p>Link: <a href='#{event['link']}'>#{event['link']}</a></p>" +
-		    		  "<p>Publicar: <a href='http://api.vlctechhub.io/v0/publish/#{event['publish_id']}'>http://api.vlctechhub.io/v0/publish/#{event['publish_id']}</a></p>"
+		    		  "<p>Publicar: <a href='http://api.vlctechhub.org/v0/publish/#{event['publish_id']}'>http://api.vlctechhub.org/v0/publish/#{event['publish_id']}</a></p>"
 		  	end
   		end
   	end
