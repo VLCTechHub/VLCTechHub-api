@@ -8,7 +8,6 @@ gem 'dotenv'
 gem 'grape'
 gem 'grape-entity'
 gem 'mongo'
-gem 'bson_ext'
 gem 'mail'
 gem 'twitter'
 
