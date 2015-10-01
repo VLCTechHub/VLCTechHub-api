@@ -1,15 +1,15 @@
 module VLCTechHub
   class Repository
     def db
-      @db ||= Mongo::MongoClient.from_uri(ENV['MONGODB_URI']).db
+      @db ||= Mongo::Client.new(ENV['MONGODB_URI'])
     end
 
     def find_by_id(id)
-      db['events'].find_one( {_id: BSON::ObjectId(id)} )
+      db['events'].find( {_id: BSON::ObjectId(id)} ).first
     end
 
     def find_by_uuid(uuid)
-      db['events'].find_one( {publish_id: uuid} )
+      db['events'].find( {publish_id: uuid} ).first
     end
 
     def find_future_events
@@ -32,7 +32,7 @@ module VLCTechHub
 
     def insert(newEvent)
       id = db['events'].insert(newEvent)
-      db['events'].find_one( {_id: id} )
+      db['events'].find( {_id: id} ).first
     end
 
     def publish(uuid)
