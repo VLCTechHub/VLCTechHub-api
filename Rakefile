@@ -61,17 +61,19 @@ namespace :mongo do
     abort "Not to be run in production!!" if ENV['RACK_ENV'] == "production"
     require 'mongo'
     # connect to source and target instances
-    source = Mongo::MongoClient.from_uri(ENV['MASTER_MONGODB_URI'])
-    target = Mongo::MongoClient.from_uri(ENV['MONGODB_URI'])
+    source = Mongo::Client.new(ENV['MASTER_MONGODB_URI'])
+    target = Mongo::Client.new(ENV['MONGODB_URI'])
     # drop existing collections in target
-    target.db['events'].drop
+    target['events'].drop
     # copy source into target, transforming data if necessary
-    source.db['events'].find.each do |event|
-      target.db['events'].insert(event)
+    source['events'].find.each do |event|
+      target['events'].insert_one(event)
     end
     # ensure indexes
-    target.db['events'].ensure_index( { date: 1 } )
-    target.db['events'].ensure_index( { date: -1 } )
+    target['events'].indexes.create_many([
+      { :key => { date: 1 }},
+      { :key => { date: -1 }}
+    ])
   end
 end
 
