@@ -1,3 +1,4 @@
+require 'bundler/setup'
 require 'dotenv/tasks'
 
 require_relative 'config/environment'
@@ -38,7 +39,7 @@ namespace :server do
       puts "\r\e[0KStopping ..."
       Rake::Task['server:down'].execute
     end
-    system "bundle exec rackup -p $PORT -E $RACK_ENV"
+    system "bundle exec rerun 'rackup -p $PORT -E $RACK_ENV'"
   end
   #desc "Stop API server"
   task :down do

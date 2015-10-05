@@ -3,7 +3,6 @@ ruby '2.2.3'
 
 gem 'rack'
 gem 'rack-cors'
-gem 'thin'
 gem 'dotenv'
 gem 'grape'
 gem 'grape-entity'
@@ -15,8 +14,10 @@ group :development, :test do
   gem 'pry'
   gem 'rspec'
   gem 'rack-test'
+  gem 'rerun'
 end
 
 group :production do
+  gem 'thin'
   gem 'newrelic_rpm'
 end
