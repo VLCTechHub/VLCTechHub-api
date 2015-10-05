@@ -32,7 +32,7 @@ module VLCTechHub
     end
 
     def insert(newEvent)
-      id = db['events'].insert(newEvent)
+      id = db['events'].insert_one(newEvent).inserted_id
       db['events'].find( {_id: id} ).first
     end
 
