@@ -37,9 +37,9 @@ module VLCTechHub
     end
 
     def publish(uuid)
-      result = db['events'].update({ published: false, publish_id: uuid },
+      result = db['events'].update_one({ published: false, publish_id: uuid },
                           { "$set" => { published: true } } )
-      was_updated = (result['n'] == 1)
+      was_updated = (result.n == 1)
     end
   end
 end
