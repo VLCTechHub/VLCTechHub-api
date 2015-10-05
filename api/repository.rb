@@ -1,6 +1,7 @@
 module VLCTechHub
   class Repository
     def db
+      Mongo::Logger.logger.level = ::Logger::FATAL unless ::VLCTechHub.development?
       @db ||= Mongo::Client.new(ENV['MONGODB_URI'])
     end
 
