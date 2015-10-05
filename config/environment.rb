@@ -1,9 +1,11 @@
-require 'i18n'
-require 'mail'
-require 'newrelic_rpm'
+require_relative 'base'
 
+require 'newrelic_rpm' if VLCTechHub.production?
+
+require 'i18n'
 I18n.enforce_available_locales = false
 
+require 'mail'
 Mail.defaults do
     delivery_method :smtp, {
       :address => 'smtp.sendgrid.net',

@@ -59,7 +59,7 @@ namespace :mongo do
 
   desc "Update data from master database"
   task :update => :dotenv do
-    abort "Not to be run in production!!" if ENV['RACK_ENV'] == "production"
+    abort "Not to be run in production!!" if VLCTechHub.production?
     require 'mongo'
     # connect to source and target instances
     source = Mongo::Client.new(ENV['MASTER_MONGODB_URI'])
@@ -91,7 +91,7 @@ end
 namespace :test do
   #desc "Prepare test environment"
   task :prepare => :dotenv do
-    ENV['RACK_ENV'] = 'test'
+    VLCTechHub.environment = :test
     puts "Ensure the target database is up and running ..."
   end
 
