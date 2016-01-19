@@ -3,7 +3,7 @@ module VLCTechHub
     class V0 < Grape::API
 
       class Event < Grape::Entity
-        expose :id, :title, :description, :date, :link
+        expose :id, :title, :description, :date, :link, :hashtag
 
         private
 
@@ -25,6 +25,10 @@ module VLCTechHub
 
         def link
           @object['link']
+        end
+
+        def hashtag
+          @object['hashtag']
         end
       end
     end
