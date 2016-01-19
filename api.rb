@@ -1,6 +1,6 @@
 require 'grape'
 require 'grape-entity'
-require 'json'
+require 'json/ext'
 require 'mongo'
 
 require_relative 'config/environment'
