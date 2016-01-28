@@ -5,8 +5,7 @@ module VLCTechHub
   module Mailer
 
     def self.publish event
-
-      return false if !ENV['EMAIL_FOR_PUBLICATION']
+      return false if ENV['EMAIL_FOR_PUBLICATION'].to_s.empty?
 
   		zone = TZInfo::Timezone.get('Europe/Madrid')
   		date = zone.utc_to_local(event['date'].utc)
@@ -29,8 +28,7 @@ module VLCTechHub
   	end
 
     def self.broadcast event
-
-      return false if !ENV['EMAIL_FOR_BROADCAST']
+      return false if ENV['EMAIL_FOR_BROADCAST'].to_s.empty?
 
       zone = TZInfo::Timezone.get('Europe/Madrid')
       date = zone.utc_to_local(event['date'].utc)

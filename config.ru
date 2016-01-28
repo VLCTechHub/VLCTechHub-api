@@ -1,6 +1,6 @@
 require 'rack/cors'
 
-require_relative 'api'
+require_relative 'boot'
 
 use Rack::Cors do
   allow do
@@ -9,4 +9,4 @@ use Rack::Cors do
   end
 end
 
-run VLCTechHub::API
+run VLCTechHub::API::Boot

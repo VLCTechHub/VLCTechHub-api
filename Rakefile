@@ -2,8 +2,8 @@ require 'bundler/setup'
 require 'dotenv/tasks'
 
 require_relative 'config/environment'
-require_relative 'api/repository'
-require_relative 'api/twitter'
+require_relative 'services/repository'
+require_relative 'services/twitter'
 
 task :default => :'server:up'
 
@@ -24,10 +24,14 @@ task :test => :'test:spec'
 
 desc "List API routes"
 task :routes do
-  require './api'
-  VLCTechHub::API.routes.each do |endpoint|
+  require './boot'
+  VLCTechHub::API::Boot.routes.each do |endpoint|
+    next if endpoint.route_method.nil?
     method = endpoint.route_method.ljust(10)
     path = endpoint.route_path
+    if endpoint.route_version 
+      path.sub!(":version", endpoint.route_version)
+    end
     puts "\t#{method} #{path}"
   end
 end
