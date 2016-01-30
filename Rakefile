@@ -2,8 +2,8 @@ require 'bundler/setup'
 require 'dotenv/tasks'
 
 require_relative 'config/environment'
-require_relative 'api/repository'
-require_relative 'api/twitter'
+require_relative 'services/repository'
+require_relative 'services/twitter'
 
 task :default => :'server:up'
 
@@ -20,14 +20,18 @@ desc "Tweet events scheduled today"
 task :tweet => :'twitter:tweet'
 
 desc "Run spec tests"
-task :test => :'test:spec'
+task :spec => :'spec:run'
 
 desc "List API routes"
 task :routes do
-  require './api'
-  VLCTechHub::API.routes.each do |endpoint|
+  require './boot'
+  VLCTechHub::API::Boot.routes.each do |endpoint|
+    next if endpoint.route_method.nil?
     method = endpoint.route_method.ljust(10)
     path = endpoint.route_path
+    if endpoint.route_version 
+      path.sub!(":version", endpoint.route_version)
+    end
     puts "\t#{method} #{path}"
   end
 end
@@ -88,7 +92,7 @@ namespace :twitter do
   end
 end
 
-namespace :test do
+namespace :spec do
   #desc "Prepare test environment"
   task :prepare => :dotenv do
     VLCTechHub.environment = :test
@@ -96,7 +100,7 @@ namespace :test do
   end
 
   #desc "Run spec tests"
-  task :spec => :'test:prepare' do
-    system "bundle exec rspec --color --format progress"
+  task :run, [:file] => :prepare do |t, args|
+    system "bundle exec rspec #{args[:file]} --color --format progress"
   end
 end

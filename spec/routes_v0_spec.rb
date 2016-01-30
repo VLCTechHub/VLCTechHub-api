@@ -1,10 +1,10 @@
 require 'spec_helper'
 require 'time'
-require_relative '../api'
+require_relative '../boot'
 
-describe VLCTechHub::API do
+describe VLCTechHub::API::V0::Routes do
   def app
-    VLCTechHub::API
+    VLCTechHub::API::Boot
   end
 
   let(:request_time) { Time.now.utc }
@@ -51,6 +51,22 @@ describe VLCTechHub::API do
       get "/v0/events/52efbf75a1aac70200000001"
       expect(last_response).to be_ok
       expect(events).not_to be_empty
+    end
+  end
+
+  describe "POST /v0/events" do
+    it "creates an event" do
+      json = {
+          title: 'Title',
+          description: 'Description',
+          link: 'Link',
+          hashtag: 'hashtag',
+          date: '20010101T12:00:00Z'
+      }
+
+      post "/v0/events/new", json
+      expect(last_response).to be_created
+      expect(events["id"]).not_to be_nil 
     end
   end
 

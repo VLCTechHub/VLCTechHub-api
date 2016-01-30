@@ -1,7 +1,6 @@
 module VLCTechHub
-  class API < Grape::API
-    class V0 < Grape::API
-
+  module API
+    module V1
       class Event < Grape::Entity
         expose :id, :title, :description, :date, :link, :hashtag
 
