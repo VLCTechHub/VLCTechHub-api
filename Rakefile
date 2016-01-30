@@ -20,7 +20,7 @@ desc "Tweet events scheduled today"
 task :tweet => :'twitter:tweet'
 
 desc "Run spec tests"
-task :test => :'test:spec'
+task :spec => :'spec:run'
 
 desc "List API routes"
 task :routes do
@@ -92,7 +92,7 @@ namespace :twitter do
   end
 end
 
-namespace :test do
+namespace :spec do
   #desc "Prepare test environment"
   task :prepare => :dotenv do
     VLCTechHub.environment = :test
@@ -100,7 +100,7 @@ namespace :test do
   end
 
   #desc "Run spec tests"
-  task :spec => :'test:prepare' do
-    system "bundle exec rspec --color --format progress"
+  task :run, [:file] => :prepare do |t, args|
+    system "bundle exec rspec #{args[:file]} --color --format progress"
   end
 end

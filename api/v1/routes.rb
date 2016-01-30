@@ -11,68 +11,58 @@ module VLCTechHub
       class Routes < Grape::API
         version 'v1', using: :path
 
-        helpers do
-          def get_hashtag
-            hashtag = params[:hashtag] || ''
-            hashtag = hashtag.strip.split[0] || ''
-            return hashtag if hashtag.empty?
-            if !hashtag.start_with?('#') && !hashtag.start_with?('@')
-              hashtag = '#' << hashtag
-            end
-            hashtag
-          end
-        end
-
         ## Events
         resource 'events' do
-          desc 'Retrieve future scheduled events'
-          get 'upcoming' do
-            events = repo.find_future_events
-            present events.to_a, with: Event
-          end
-
-          desc 'Retrieve latest 10 past events'
-          get 'past' do
-            events = repo.find_latest_events
-            present events.to_a, with: Event
-          end
-
-          desc 'Retrieve events by year and month'
+          desc 'Retrieve events by category or year and month'
           params do
-            requires :year, type: String, regexp: /20\d\d/, desc: "Year"
-            requires :month, type: String, regexp: /0[1-9]|1[012]/, desc: "Month"
+            optional :year, type: String, regexp: /^20\d\d$/, desc: "Year"
+            given :year do
+              requires :month, type: String, regexp: /^0[1-9]|1[012]$/, desc: "Month"
+            end
+            optional :category, type: String,  values: ['recent', 'next']
+            mutually_exclusive :year, :category 
           end
-          get ':year/:month', requirements: { year: /\d{4}/, month: /\d{2}/ } do
-            events = repo.find_by_month(params[:year].to_i, params[:month].to_i)
-            present events.to_a, with: Event
+          get do
+            events = []
+            if params[:category] == 'recent'
+              events = repo.find_latest_events
+            elsif params[:category] == 'next'
+              events = repo.find_future_events
+            elsif params[:year]
+              events = repo.find_by_month(params[:year].to_i, params[:month].to_i)
+            end
+            present :events, events.to_a, with: Event
           end
 
           desc 'Retrieve a specific event'
           get ':id' do
             event = repo.find_by_id params[:id]
-            present event, with: Event
+            present :event, event, with: Event
           end
 
-          desc 'Create new event'
+          desc 'Create a  new event'
           params do
-            requires :title, type: String,  regexp: /.+/, desc: "The title of the event."
-            requires :description, type: String, regexp: /.+/, desc: "The description of the event."
-            requires :link, type: String, regexp: /.+/, desc: "The link to the published post outside VLCTechHub."
-            requires :date, type: Time, regexp: /.+/, desc: "Starting date and time of the event."
+            group :event, type: Hash do
+              requires :title, type: String,  regexp: /.+/, desc: "The title of the event."
+              requires :description, type: String, regexp: /.+/, desc: "The description of the event."
+              requires :link, type: String, regexp: /.+/, desc: "The link to the published post outside VLCTechHub."
+              requires :date, type: Time, regexp: /.+/, desc: "Starting date and time of the event."
+            end
           end
-          post 'new' do
+          post do
             newEvent = {
-              title: params[:title],
-              description: params[:description],
-              link: params[:link],
-              date: params[:date].utc,
-              hashtag: get_hashtag,
+              title: params[:event][:title],
+              description: params[:event][:description],
+              link: params[:event][:link],
+              date: params[:event][:date].utc,
+              hashtag: Helper::Hashtag.clean(params[:event][:hashtag]),
+              # mover a repo.insert
               published: false,
               publish_id: SecureRandom.uuid
             }
             event = repo.insert newEvent
             mailer.publish event
-            present event, with: Event
+            present :event, event, with: Event
           end
         end
 
@@ -85,7 +75,7 @@ module VLCTechHub
               event = repo.find_by_uuid params[:uuid]
               mailer.broadcast event
               twitter.tweet event
-              present event, with: Event
+              present :event, event, with: Event
           end
         end
       end

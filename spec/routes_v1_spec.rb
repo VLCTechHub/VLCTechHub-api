@@ -8,49 +8,62 @@ describe VLCTechHub::API::V1::Routes do
   end
 
   let(:request_time) { Time.now.utc }
-  subject(:events) { JSON.parse(last_response.body) }
-
-  describe "GET /v1/events/upcoming" do
-    it "returns a list of future (non past) events" do
-      get "/v1/events/upcoming"
+  
+  describe "GET /v1/events" do
+    subject(:events) { JSON.parse(last_response.body)['events'] }
+ 
+    it "returns a list of all next events" do
+      get "/v1/events?category=next"
       expect(last_response).to be_ok
       expect(past_events).to be_empty
     end
-  end
 
-  describe "GET /v1/events/past" do
-    it "returns a list of past (non future) events" do
-      get "/v1/events/past"
+    it "returns a list of past events" do
+      get "/v1/events?category=recent"
       expect(last_response).to be_ok
       expect(future_events).to be_empty
     end
-  end
 
-  describe "GET /v1/events/year/month" do
     it "returns a list of events for that year and month" do
-      get "/v1/events/2014/02"
+      get "/v1/events?year=2014&month=02"
       expect(last_response).to be_ok
       expect(events_for_year_month(2014,02)).not_to be_empty
     end
-    it "returns error if invalid year or month" do
-      get "/v1/events/0014/01"
-      expect(last_response).to be_bad_request
-      get "/v1/events/2014/00"
-      expect(last_response).to be_bad_request
-    end
+
     it "returns not found if year or month are bad formatted" do
-      get "/v1/events/20140/01"
-      expect(last_response).to be_not_found
-      get "/v1/events/2014/001"
-      expect(last_response).to be_not_found
+      get "/v1/events?year=20140&month=01"
+      expect(last_response).to be_bad_request
+      get "/v1/events?year=2014&month=001"
+      expect(last_response).to be_bad_request
     end
+
   end
 
   describe "GET /v1/events/:id" do
+    subject(:event) { JSON.parse(last_response.body)['event'] }
+
     it "returns an event by id" do
       get "/v1/events/52efbf75a1aac70200000001"
       expect(last_response).to be_ok
-      expect(events).not_to be_empty
+      expect(event).not_to be_empty
+    end
+  end
+
+  describe "POST /v1/events" do
+    subject(:event) { JSON.parse(last_response.body)['event'] }
+
+    it "creates an event" do
+      data = {
+          title: 'Title',
+          description: 'Description',
+          link: 'Link',
+          hashtag: 'hashtag',
+          date: '20010101T12:00:00Z'
+      }
+
+      post "/v1/events", {event: data}
+      expect(last_response).to be_created
+      expect(event['id']).not_to be_nil 
     end
   end
 
