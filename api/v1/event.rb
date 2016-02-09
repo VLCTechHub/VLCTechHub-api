@@ -7,7 +7,8 @@ module VLCTechHub
         private
 
         def id
-          @object['_id'].to_s
+          return @object['_id'].to_s unless  @object['publish_id']
+          @object['publish_id'].to_s
         end
 
         def title

@@ -20,7 +20,7 @@ module VLCTechHub
               requires :month, type: String, regexp: /^0[1-9]|1[012]$/, desc: "Month"
             end
             optional :category, type: String,  values: ['recent', 'next']
-            mutually_exclusive :year, :category 
+            mutually_exclusive :year, :category
           end
           get do
             events = []
@@ -32,12 +32,6 @@ module VLCTechHub
               events = repo.find_by_month(params[:year].to_i, params[:month].to_i)
             end
             present :events, events.to_a, with: Event
-          end
-
-          desc 'Retrieve a specific event'
-          get ':id' do
-            event = repo.find_by_id params[:id]
-            present :event, event, with: Event
           end
 
           desc 'Create a  new event'

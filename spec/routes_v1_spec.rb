@@ -8,10 +8,10 @@ describe VLCTechHub::API::V1::Routes do
   end
 
   let(:request_time) { Time.now.utc }
-  
+
   describe "GET /v1/events" do
     subject(:events) { JSON.parse(last_response.body)['events'] }
- 
+
     it "returns a list of all next events" do
       get "/v1/events?category=next"
       expect(last_response).to be_ok
@@ -39,16 +39,6 @@ describe VLCTechHub::API::V1::Routes do
 
   end
 
-  describe "GET /v1/events/:id" do
-    subject(:event) { JSON.parse(last_response.body)['event'] }
-
-    it "returns an event by id" do
-      get "/v1/events/52efbf75a1aac70200000001"
-      expect(last_response).to be_ok
-      expect(event).not_to be_empty
-    end
-  end
-
   describe "POST /v1/events" do
     subject(:event) { JSON.parse(last_response.body)['event'] }
 
@@ -63,7 +53,7 @@ describe VLCTechHub::API::V1::Routes do
 
       post "/v1/events", {event: data}
       expect(last_response).to be_created
-      expect(event['id']).not_to be_nil 
+      expect(event['id']).not_to be_nil
     end
   end
 
