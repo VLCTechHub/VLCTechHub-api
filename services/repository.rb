@@ -31,8 +31,10 @@ module VLCTechHub
       events = db['events'].find( { published: true, date: { :$gte => month.to_time.utc , :$lt => next_month.to_time.utc } }).sort( {date: 1} ) 
     end
 
-    def insert(newEvent)
-      id = db['events'].insert_one(newEvent).inserted_id
+    def insert(new_event)
+      new_event['published'] = false
+      new_event['publish_id'] = SecureRandom.uuid
+      id = db['events'].insert_one(new_event).inserted_id
       db['events'].find( {_id: id} ).first
     end
 
