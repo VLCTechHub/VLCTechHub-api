@@ -44,17 +44,14 @@ module VLCTechHub
             end
           end
           post do
-            newEvent = {
+            new_event = {
               title: params[:event][:title],
               description: params[:event][:description],
               link: params[:event][:link],
               date: params[:event][:date].utc,
               hashtag: Helper::Hashtag.clean(params[:event][:hashtag]),
-              # mover a repo.insert
-              published: false,
-              publish_id: SecureRandom.uuid
             }
-            event = repo.insert newEvent
+            event = repo.insert new_event
             mailer.publish event
             present :event, event, with: Event
           end
