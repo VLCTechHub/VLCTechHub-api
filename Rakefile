@@ -29,7 +29,7 @@ task :routes do
     next if endpoint.route_method.nil?
     method = endpoint.route_method.ljust(10)
     path = endpoint.route_path
-    if endpoint.route_version 
+    if endpoint.route_version
       path.sub!(":version", endpoint.route_version)
     end
     puts "\t#{method} #{path}"
@@ -61,25 +61,47 @@ namespace :mongo do
     system "mongo #{username} #{password} #{uri.host}:#{uri.port}#{uri.path}"
   end
 
-  desc "Update data from master database"
-  task :update => :dotenv do
-    abort "Not to be run in production!!" if VLCTechHub.production?
+  desc "Prepare database"
+  task :prepare => :dotenv do
+    require 'multi_json'
     require 'mongo'
-    # connect to source and target instances
-    source = Mongo::Client.new(ENV['MASTER_MONGODB_URI'])
-    target = Mongo::Client.new(ENV['MONGODB_URI'])
-    # drop existing collections in target
-    target['events'].drop
-    # copy source into target, transforming data if necessary
-    source['events'].find.each do |event|
-      target['events'].insert_one(event)
+    require 'time'
+
+    file = File.read('config/data/events.json')
+    events = MultiJson.load(file)
+
+    db = Mongo::Client.new(ENV['MONGODB_URI'])
+    db['events'].drop
+
+    events.each do |event|
+      event["date"] = DateTime.parse(event["date"]).utc
+      event["published"] = true
+      event["publish_id"] = Random.rand.denominator.to_s
+      # puts event.inspect
+      db['events'].insert_one(event)
     end
-    # ensure indexes
-    target['events'].indexes.create_many([
-      { :key => { date: 1 }},
-      { :key => { date: -1 }}
-    ])
   end
+
+
+  # desc "Update data from master database"
+  # task :update => :dotenv do
+  #   abort "Not to be run in production!!" if VLCTechHub.production?
+  #   require 'mongo'
+  #   # connect to source and target instances
+  #   source = Mongo::Client.new(ENV['MASTER_MONGODB_URI'])
+  #   target = Mongo::Client.new(ENV['MONGODB_URI'])
+  #   # drop existing collections in target
+  #   target['events'].drop
+  #   # copy source into target, transforming data if necessary
+  #   source['events'].find.each do |event|
+  #     target['events'].insert_one(event)
+  #   end
+  #   # ensure indexes
+  #   target['events'].indexes.create_many([
+  #     { :key => { date: 1 }},
+  #     { :key => { date: -1 }}
+  #   ])
+  # end
 end
 
 namespace :twitter do
