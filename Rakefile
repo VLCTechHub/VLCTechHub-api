@@ -70,27 +70,17 @@ namespace :mongo do
     file = File.read('config/data/events.json')
     events = MultiJson.load(file)
 
-    Mongo::Logger.logger.level = ::Logger::FATAL
-
-    uri = VLCTechHub.development? ? ENV['MONGODB_URI'] : ENV['TEST_MONGODB_URI']
-    puts 'Contecting to ' + uri + '...'
-
-    db = Mongo::Client.new(uri)
+    repo = VLCTechHub::Repository.new
 
     puts 'Filling events collection...'
-    db['events'].drop
-    events.each do |event, index|
-      date = DateTime.now.next_day
-      date = DateTime.parse(event["date"]).utc if event["date"]
-      event["date"] = date
-      event["published"] = true
-      event["publish_id"] = index.to_s
-      db['events'].insert_one(event)
+    repo.removeAll
+    events.each do |event|
+      event["date"] = DateTime.parse(event["date"] || DateTime.now.next_day.to_s)
+      repo.insert(event)
     end
+    repo.publishAll
 
     puts 'Finished!'
-    Mongo::Logger.logger.level = ::Logger::DEBUG
-
   end
 end
 
