@@ -70,16 +70,27 @@ namespace :mongo do
     file = File.read('config/data/events.json')
     events = MultiJson.load(file)
 
-    db = Mongo::Client.new(ENV['MONGODB_URI'])
-    db['events'].drop
+    Mongo::Logger.logger.level = ::Logger::FATAL
 
-    events.each do |event|
-      event["date"] = DateTime.parse(event["date"]).utc
+    uri = VLCTechHub.development? ? ENV['MONGODB_URI'] : ENV['TEST_MONGODB_URI']
+    puts 'Contecting to ' + uri + '...'
+
+    db = Mongo::Client.new(uri)
+
+    puts 'Filling events collection...'
+    db['events'].drop
+    events.each do |event, index|
+      date = DateTime.now.next_day
+      date = DateTime.parse(event["date"]).utc if event["date"]
+      event["date"] = date
       event["published"] = true
-      event["publish_id"] = Random.rand.denominator.to_s
-      # puts event.inspect
+      event["publish_id"] = index.to_s
       db['events'].insert_one(event)
     end
+
+    puts 'Finished!'
+    Mongo::Logger.logger.level = ::Logger::DEBUG
+
   end
 
 
@@ -122,7 +133,7 @@ namespace :spec do
   end
 
   #desc "Run spec tests"
-  task :run, [:file] => :prepare do |t, args|
+  task :run, [:file] => [:prepare, 'mongo:prepare'] do |t, args|
     system "bundle exec rspec #{args[:file]} --color --format progress"
   end
 end

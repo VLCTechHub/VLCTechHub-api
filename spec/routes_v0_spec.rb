@@ -28,9 +28,9 @@ describe VLCTechHub::API::V0::Routes do
 
   describe "GET /v0/events/year/month" do
     it "returns a list of events for that year and month" do
-      get "/v0/events/2014/02"
+      get "/v0/events/2016/02"
       expect(last_response).to be_ok
-      expect(events_for_year_month(2014,02)).not_to be_empty
+      expect(events_for_year_month(2016,02)).not_to be_empty
     end
     it "returns error if invalid year or month" do
       get "/v0/events/0014/01"
@@ -46,14 +46,6 @@ describe VLCTechHub::API::V0::Routes do
     end
   end
 
-  describe "GET /v0/events/:id" do
-    it "returns an event by id" do
-      get "/v0/events/52efbf75a1aac70200000001"
-      expect(last_response).to be_ok
-      expect(events).not_to be_empty
-    end
-  end
-
   describe "POST /v0/events" do
     it "creates an event" do
       json = {
@@ -66,7 +58,7 @@ describe VLCTechHub::API::V0::Routes do
 
       post "/v0/events/new", json
       expect(last_response).to be_created
-      expect(events["id"]).not_to be_nil 
+      expect(events["id"]).not_to be_nil
     end
   end
 
