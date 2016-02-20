@@ -25,9 +25,9 @@ describe VLCTechHub::API::V1::Routes do
     end
 
     it "returns a list of events for that year and month" do
-      get "/v1/events?year=2014&month=02"
+      get "/v1/events?year=2016&month=02"
       expect(last_response).to be_ok
-      expect(events_for_year_month(2014,02)).not_to be_empty
+      expect(events_for_year_month(2016,02)).not_to be_empty
     end
 
     it "returns not found if year or month are bad formatted" do

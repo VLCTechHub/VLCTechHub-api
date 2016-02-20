@@ -12,7 +12,7 @@ require_relative 'services/twitter'
 require_relative 'services/mailer'
 
 module VLCTechHub
-  module API 
+  module API
     class Boot < Grape::API
       format :json
 
