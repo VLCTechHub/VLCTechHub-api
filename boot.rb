@@ -5,34 +5,23 @@ require 'mongo'
 
 require_relative 'config/environment'
 
-require_relative 'api/v0/routes'
-require_relative 'api/v1/routes'
-require_relative 'services/repository'
-require_relative 'services/twitter'
-require_relative 'services/mailer'
+# require_relative 'api/v0/routes'
+require_relative 'api/v1/event_routes'
+require_relative 'api/v1/job_routes'
+require_relative 'services/event/repository'
+require_relative 'services/event/twitter'
+require_relative 'services/event/mailer'
+require_relative 'services/job/repository'
 
 module VLCTechHub
   module API
     class Boot < Grape::API
       format :json
 
-      helpers do
-        def repo
-          @repo ||= VLCTechHub::Repository.new
-        end
-        def mailer
-          VLCTechHub::Mailer
-        end
-        def twitter
-          @twitter ||= VLCTechHub::Twitter.new
-        end
-      end
-
       get do
-        [{ version: "v0" }, { version: "v1" }]
+        [{ version: "v1" }]
       end
 
-      mount VLCTechHub::API::V0::Routes
       mount VLCTechHub::API::V1::Routes
 
       route :any, '*path' do
