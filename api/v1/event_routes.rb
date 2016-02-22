@@ -3,7 +3,8 @@ require 'time'
 require 'date'
 require 'securerandom'
 
-require_relative 'event'
+require_relative 'entity/event'
+require_relative '../../helpers/hashtag'
 
 module VLCTechHub
   module API
@@ -13,6 +14,13 @@ module VLCTechHub
 
         ## Events
         resource 'events' do
+
+          helpers do
+            def events
+              @events ||= VLCTechHub::Event::Repository.new
+            end
+          end
+
           desc 'Retrieve events by category or year and month'
           params do
             optional :year, type: String, regexp: /^20\d\d$/, desc: "Year"
@@ -23,15 +31,15 @@ module VLCTechHub
             mutually_exclusive :year, :category
           end
           get do
-            events = []
+            result = []
             if params[:category] == 'recent'
-              events = repo.find_latest_events
+              result = events.find_latest_events
             elsif params[:category] == 'next'
-              events = repo.find_future_events
+              result = events.find_future_events
             elsif params[:year]
-              events = repo.find_by_month(params[:year].to_i, params[:month].to_i)
+              result = events.find_by_month(params[:year].to_i, params[:month].to_i)
             end
-            present :events, events.to_a, with: Event
+            present :events, result.to_a, with: Event
           end
 
           desc 'Create a  new event'
@@ -44,29 +52,29 @@ module VLCTechHub
             end
           end
           post do
-            new_event = {
+            event = {
               title: params[:event][:title],
               description: params[:event][:description],
               link: params[:event][:link],
               date: params[:event][:date].utc,
               hashtag: Helper::Hashtag.clean(params[:event][:hashtag]),
             }
-            event = repo.insert new_event
-            mailer.publish event
-            present :event, event, with: Event
+            created_event = events.insert event
+            VLCTechHub::Event::Mailer.publish created_event
+            present :event, created_event, with: Event
           end
-        end
 
-        resource 'publish' do
-          desc 'Activate publication from a link in a mail and broadcast it'
-          get ':uuid' do
-              was_updated = repo.publish params[:uuid]
-              error!('404 Not found', 404) unless was_updated
+          resource 'publish' do
+            desc 'Activate publication from a link in a mail and broadcast it'
+            get '/:uuid' do
+                was_updated = events.publish params[:uuid]
+                error!('404 Not found', 404) unless was_updated
 
-              event = repo.find_by_uuid params[:uuid]
-              mailer.broadcast event
-              twitter.tweet event
-              present :event, event, with: Event
+                event = events.find_by_uuid params[:uuid]
+                VLCTechHub::Event::Mailer.broadcast event
+                VLCTechHub::Event::Twitter.tweet event
+                present :event, event, with: Event
+            end
           end
         end
       end

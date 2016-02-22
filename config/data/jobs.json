@@ -1,0 +1,39 @@
+[
+  {
+    "title":"Old job offer",
+    "description": "So old it should not be retrieved by the api",
+    "company": {
+      "name": "Awesome Company Inc.",
+      "link": "http://www.duckduckgo.com"
+    },
+    "tags": ["ruby","javascript","aws"],
+    "salary": "25k-35k",
+    "link": null,
+    "how_to_apply": "Send us a mail to xxx@xxx.com",
+    "date": "2000-01-01T12:00:00Z"
+  },
+  {
+    "title":"Fool stuck developer",
+    "description": "We are an awesome company",
+    "company": {
+      "name": "Awesome Company Inc.",
+      "link": "http://www.duckduckgo.com"
+    },
+    "tags": ["ruby","javascript","aws"],
+    "salary": "25k-35k",
+    "link": null,
+    "how_to_apply": "Send us a mail to xxx@xxx.com"
+  },
+  {
+    "title":"UI/UX Designer",
+    "description": "We are an awesome company",
+    "company": {
+      "name": "Awesome Company Inc.",
+      "link": "http://www.duckduckgo.com"
+    },
+    "tags": ["photoshop","javascript","invision"],
+    "salary": "~35k",
+    "link": "http://wikipedia.org",
+    "how_to_apply": null
+  }
+]

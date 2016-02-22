@@ -1,6 +1,4 @@
 require 'spec_helper'
-require 'time'
-require_relative '../boot'
 
 describe VLCTechHub::API::V1::Routes do
   def app
@@ -54,6 +52,40 @@ describe VLCTechHub::API::V1::Routes do
       post "/v1/events", {event: data}
       expect(last_response).to be_created
       expect(event['id']).not_to be_nil
+    end
+  end
+
+  describe "GET /v1/events/publish/" do
+    context 'Event is not found' do
+      it "returns 404 if not found" do
+        get "/v1/events/publish/not-found-id"
+        expect(last_response).to be_not_found
+      end
+    end
+
+    context 'Event is found' do
+      before do
+        Grape::Endpoint.before_each do |endpoint|
+          event = { 'date' => DateTime.now }
+          repo = double(:events, publish: true, find_by_uuid: event)
+          allow(endpoint).to receive(:events).and_return(repo)
+        end
+      end
+
+      after{ Grape::Endpoint.before_each nil }
+
+      it "tweets and sends a mail about it" do
+        mailer = class_double('VLCTechHub::Event::Mailer').
+          as_stubbed_const
+        expect(mailer).to receive(:broadcast)
+
+        twitter = class_double("VLCTechHub::Event::Twitter").
+          as_stubbed_const
+        expect(twitter).to receive(:tweet)
+
+        get "/v1/events/publish/found-id"
+        expect(last_response).to be_ok
+      end
     end
   end
 

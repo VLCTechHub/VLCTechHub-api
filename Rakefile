@@ -2,8 +2,9 @@ require 'bundler/setup'
 require 'dotenv/tasks'
 
 require_relative 'config/environment'
-require_relative 'services/repository'
-require_relative 'services/twitter'
+require_relative 'services/event/repository'
+require_relative 'services/event/twitter'
+require_relative 'services/job/repository'
 
 task :default => :'server:up'
 
@@ -20,7 +21,7 @@ desc "Tweet events scheduled today"
 task :tweet => :'twitter:tweet'
 
 desc "Run spec tests"
-task :spec => :'spec:run'
+task :test => :'spec:run'
 
 desc "List API routes"
 task :routes do
@@ -70,15 +71,26 @@ namespace :mongo do
     file = File.read('config/data/events.json')
     events = MultiJson.load(file)
 
-    repo = VLCTechHub::Repository.new
-
+    event_repo = VLCTechHub::Event::Repository.new
     puts 'Filling events collection...'
-    repo.removeAll
+    event_repo.removeAll
     events.each do |event|
       event["date"] = DateTime.parse(event["date"] || DateTime.now.next_day.to_s)
-      repo.insert(event)
+      event_repo.insert(event)
     end
-    repo.publishAll
+    event_repo.publishAll
+
+    file = File.read('config/data/jobs.json')
+    jobs = MultiJson.load(file)
+
+    job_repo = VLCTechHub::Job::Repository.new
+    puts 'Filling jobs collection...'
+    job_repo.removeAll
+    jobs.each do |job|
+      job["date"] = DateTime.parse(job['date'] || DateTime.now.prev_month.next_day.to_s)
+      job_repo.insert(job)
+    end
+    job_repo.publishAll
 
     puts 'Finished!'
   end
@@ -87,7 +99,7 @@ end
 namespace :twitter do
   #dec "Tweet events scheduled today"
   task :tweet => :dotenv do
-    repo = VLCTechHub::Repository.new
+    repo = VLCTechHub::Event::Repository.new
     twitter = VLCTechHub::Twitter.new
     today_events = repo.find_today_events
     twitter.tweet_today_events(today_events)
