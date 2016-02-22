@@ -9,6 +9,7 @@ gem 'grape-entity', '~> 0.5.0'
 gem 'mongo', '~> 2.2.2'
 gem 'mail', '~> 2.6.3'
 gem 'twitter', '~> 5.16.0'
+gem 'rake', '~> 10.5'
 
 group :development, :test do
   gem 'pry', '~> 0.10.3'

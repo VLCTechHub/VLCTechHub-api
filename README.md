@@ -10,9 +10,9 @@ How to use it
  - Install ruby 2.2.3 (you might want to install it with [rbenv](https://www.digitalocean.com/community/tutorials/how-to-install-ruby-on-rails-with-rbenv-on-ubuntu-14-04))
  - Install mongo (optional, you can use a remote service)
  - Install bundle & run `bundle install`
- - Copy `.env.example` as `.env`
+ - Build the project with `bundle exec rake build`
  - Configure your mongo connection uris in `.env` (not necesary if you use local mongo with default values)
- - Run `rake`
+ - Run `bundle exec rake up`
  - Visit `http://localhost:5000`
 
 How to restore dev database
@@ -24,6 +24,6 @@ How to restore dev database
 How to run the tests
 ---------------------
 
- - Run `rake spec:run`
+ - Run `rake test`
 
 

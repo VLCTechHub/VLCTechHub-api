@@ -8,11 +8,18 @@ require_relative 'services/job/repository'
 
 task :default => :'server:up'
 
+desc "Build the project"
+task :build do
+  puts 'Creating .env file...'
+  cp '.env.example', '.env'
+  puts 'Build done!'
+end
+
 desc "Start API server"
-task :start => :'server:up'
+task :up => :'server:up'
 
 desc "Stop API server"
-task :stop => :'server:down'
+task :down => :'server:down'
 
 desc "Connect to database console"
 task :mongo => :'mongo:connect'
@@ -100,7 +107,7 @@ namespace :twitter do
   #dec "Tweet events scheduled today"
   task :tweet => :dotenv do
     repo = VLCTechHub::Event::Repository.new
-    twitter = VLCTechHub::Twitter.new
+    twitter = VLCTechHub::Event::Twitter.new
     today_events = repo.find_today_events
     twitter.tweet_today_events(today_events)
   end

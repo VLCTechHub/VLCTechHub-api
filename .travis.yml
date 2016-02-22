@@ -1,3 +1,5 @@
 language: ruby
+script: bundle exec rake build
+bundler_args: --without production
 services:
   - mongodb
