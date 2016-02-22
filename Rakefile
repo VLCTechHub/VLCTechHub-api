@@ -21,7 +21,7 @@ desc "Tweet events scheduled today"
 task :tweet => :'twitter:tweet'
 
 desc "Run spec tests"
-task :spec => :'spec:run'
+task :test => :'spec:run'
 
 desc "List API routes"
 task :routes do
