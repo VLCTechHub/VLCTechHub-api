@@ -12,10 +12,10 @@ GEM
       descendants_tracker (~> 0.0.4)
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
-    bson (4.0.1)
+    bson (4.0.2)
     buftok (0.2.0)
     builder (3.2.2)
-    coderay (1.1.0)
+    coderay (1.1.1)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
     daemons (1.2.3)
@@ -54,25 +54,25 @@ GEM
     http-form_data (1.0.1)
     http_parser.rb (0.6.0)
     i18n (0.7.0)
-    ice_nine (0.11.1)
+    ice_nine (0.11.2)
     json (1.8.3)
-    listen (3.0.5)
+    listen (3.0.6)
       rb-fsevent (>= 0.9.3)
-      rb-inotify (>= 0.9)
+      rb-inotify (>= 0.9.7)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
     memoizable (0.4.2)
       thread_safe (~> 0.3, >= 0.3.1)
     method_source (0.8.2)
-    mime-types (2.99)
+    mime-types (2.99.1)
     minitest (5.8.4)
-    mongo (2.2.2)
+    mongo (2.2.3)
       bson (~> 4.0)
     multi_json (1.11.2)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
     naught (1.1.0)
-    newrelic_rpm (3.14.2.312)
+    newrelic_rpm (3.14.3.313)
     pry (0.10.3)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -86,7 +86,7 @@ GEM
     rack-test (0.6.3)
       rack (>= 1.0)
     rb-fsevent (0.9.7)
-    rb-inotify (0.9.5)
+    rb-inotify (0.9.7)
       ffi (>= 0.5.0)
     rerun (0.11.0)
       listen (~> 3.0)
@@ -94,7 +94,7 @@ GEM
       rspec-core (~> 3.4.0)
       rspec-expectations (~> 3.4.0)
       rspec-mocks (~> 3.4.0)
-    rspec-core (3.4.2)
+    rspec-core (3.4.3)
       rspec-support (~> 3.4.0)
     rspec-expectations (3.4.0)
       diff-lcs (>= 1.2.0, < 2.0)
@@ -125,7 +125,7 @@ GEM
       thread_safe (~> 0.1)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.7.1)
+    unf_ext (0.0.7.2)
     virtus (1.0.5)
       axiom-types (~> 0.1)
       coercible (~> 1.0)
@@ -136,20 +136,20 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  dotenv
-  grape
-  grape-entity
-  mail
-  mongo
-  newrelic_rpm
-  pry
-  rack
-  rack-cors
-  rack-test
-  rerun
-  rspec
-  thin
-  twitter
+  dotenv (~> 2.1.0)
+  grape (~> 0.14.0)
+  grape-entity (~> 0.5.0)
+  mail (~> 2.6.3)
+  mongo (~> 2.2.2)
+  newrelic_rpm (~> 3.14.2)
+  pry (~> 0.10.3)
+  rack (~> 1.6.4)
+  rack-cors (~> 0.4.0)
+  rack-test (~> 0.6.3)
+  rerun (~> 0.11.0)
+  rspec (~> 3.4.0)
+  thin (~> 1.6.4)
+  twitter (~> 5.16.0)
 
 BUNDLED WITH
    1.11.2
