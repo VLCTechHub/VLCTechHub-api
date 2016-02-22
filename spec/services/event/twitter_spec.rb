@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'time'
 
 describe VLCTechHub::Event::Twitter do
   let(:event) do

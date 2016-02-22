@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'time'
 
 describe VLCTechHub::API::V1::Routes do
   def app

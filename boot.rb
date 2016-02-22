@@ -5,7 +5,6 @@ require 'mongo'
 
 require_relative 'config/environment'
 
-# require_relative 'api/v0/routes'
 require_relative 'api/v1/event_routes'
 require_relative 'api/v1/job_routes'
 require_relative 'services/event/repository'

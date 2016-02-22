@@ -1,7 +1,4 @@
 require 'spec_helper'
-require 'time'
-require 'mail'
-require 'pry'
 
 describe VLCTechHub::Event::Mailer do
 
