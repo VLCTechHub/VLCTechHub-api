@@ -27,3 +27,8 @@ How to run the tests
  - Run `rake test`
 
 
+--
+
+[![Build Status](https://travis-ci.org/VLCTechHub/VLCTechHub-api.svg?branch=master)](https://travis-ci.org/VLCTechHub/VLCTechHub-api)
+
+
