@@ -5,8 +5,8 @@ module VLCTechHub
       def initialize
         @uri =  VLCTechHub.test? ? ENV['TEST_MONGODB_URI'] : ENV['MONGODB_URI']
         Mongo::Logger.logger.level = ::Logger::FATAL unless ::VLCTechHub.development?
-      end
 
+      end
       def db
         @db ||= Mongo::Client.new(@uri)
       end
@@ -38,10 +38,15 @@ module VLCTechHub
       end
 
       def insert(new_event)
-        new_event['published'] = false
-        new_event['publish_id'] = SecureRandom.uuid
-        id = db['events'].insert_one(new_event).inserted_id
-        db['events'].find( {_id: id} ).first
+        id = BSON::ObjectId.new
+        created_at = id.generation_time
+        new_event[:_id] = id
+        new_event[:published] = false
+        new_event[:publish_id] = SecureRandom.uuid
+        new_event[:created_at] = created_at
+        new_event[:slug] = "#{new_event[:title].downcase.strip.gsub(/[^\w-]/, '-')}-#{created_at.to_i.to_s(16)}".squeeze('-')
+        db['events'].insert_one(new_event)
+        new_event
       end
 
       def publish(uuid)
