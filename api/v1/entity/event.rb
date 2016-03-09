@@ -30,6 +30,10 @@ module VLCTechHub
         def hashtag
           @object['hashtag']
         end
+
+        def slug
+          @object['slug']
+        end
       end
     end
   end

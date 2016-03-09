@@ -23,11 +23,12 @@ module VLCTechHub
       end
 
       def insert(job_offer)
+        job_offer.stringify_keys!
         job_offer['published'] = false
         job_offer['publish_id'] = SecureRandom.uuid
         job_offer['created_at'] = DateTime.now
-        id = collection.insert_one(job_offer).inserted_id
-        collection.find( {_id: id} ).first
+        collection.insert_one(job_offer)
+        job_offer
       end
 
       def publish(uuid)
