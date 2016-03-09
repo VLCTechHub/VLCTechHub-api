@@ -23,6 +23,7 @@ module VLCTechHub
       end
 
       def insert(job_offer)
+        job_offer.stringify_keys!
         job_offer['published'] = false
         job_offer['publish_id'] = SecureRandom.uuid
         job_offer['created_at'] = DateTime.now

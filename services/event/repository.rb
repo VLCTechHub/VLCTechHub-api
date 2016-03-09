@@ -38,13 +38,14 @@ module VLCTechHub
       end
 
       def insert(new_event)
+        new_event.stringify_keys!
         id = BSON::ObjectId.new
         created_at = id.generation_time
-        new_event[:_id] = id
-        new_event[:published] = false
-        new_event[:publish_id] = SecureRandom.uuid
-        new_event[:created_at] = created_at
-        new_event[:slug] = "#{new_event[:title].downcase.strip.gsub(/[^\w-]/, '-')}-#{created_at.to_i.to_s(16)}".squeeze('-')
+        new_event['_id'] = id
+        new_event['published'] = false
+        new_event['publish_id'] = SecureRandom.uuid
+        new_event['created_at'] = created_at
+        new_event['slug'] = "#{new_event['title'].downcase.strip.gsub(/[^\w-]/, '-')}-#{created_at.to_i.to_s(16)}".squeeze('-')
         db['events'].insert_one(new_event)
         new_event
       end
