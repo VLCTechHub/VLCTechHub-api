@@ -1,5 +1,7 @@
+require 'mongo'
+
 module VLCTechHub
-  module Job
+  module Base
     class Repository
 
       def initialize
@@ -12,23 +14,7 @@ module VLCTechHub
       end
 
       def collection
-        db['jobs']
-      end
-
-      def find_latest_jobs
-        month = DateTime.now
-        previous_month = (month << 1)
-        collection.find( { published: true,
-                           date: { :$gte => previous_month.to_time.utc}}).sort( {date: 1} )
-      end
-
-      def insert(job_offer)
-        job_offer.stringify_keys!
-        job_offer['published'] = false
-        job_offer['publish_id'] = SecureRandom.uuid
-        job_offer['created_at'] = DateTime.now
-        collection.insert_one(job_offer)
-        job_offer
+        # Implement in child classes
       end
 
       def publish(uuid)
@@ -37,13 +23,13 @@ module VLCTechHub
         was_updated = (result.n == 1)
       end
 
-      def publishAll
+      def publish_all
         collection.update_many({ published: false },
                                { "$set" => { published: true, published_at: DateTime.now } } )
         true
       end
 
-      def removeAll
+      def remove_all
         collection.drop
         true
       end

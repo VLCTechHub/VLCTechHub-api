@@ -1,0 +1,18 @@
+[
+  {
+    "hashtag":"@decharlas",
+    "name": "decharlas",
+    "description": "Charlas sobre tecnología en la Universitat Jaume I de Castellón",
+    "profile_image_small_url":"http://pbs.twimg.com/profile_images/547324659616579584/N8J3uyRq_normal.png",
+    "profile_image_big_url":"http://pbs.twimg.com/profile_images/547324659616579584/N8J3uyRq_400x400.png",
+    "website":""
+  },
+  {
+    "hashtag":"@CoderDojoVLC",
+    "name": "CoderDojo Valencia",
+    "description": "CoderDojo Valencia es un proyecto de la Asociacion ByLinedu, para alfabetizacion digital y programacion para todas las edades",
+    "profile_image_small_url":"http://pbs.twimg.com/profile_images/599890384106483712/3Tb22LVn_normal.png",
+    "profile_image_big_url":"http://pbs.twimg.com/profile_images/599890384106483712/3Tb22LVn_400x400.png",
+    "website":""
+  }
+]
