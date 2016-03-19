@@ -2,9 +2,12 @@ require 'bundler/setup'
 require 'dotenv/tasks'
 
 require_relative 'config/environment'
-require_relative 'services/event/repository'
-require_relative 'services/event/twitter'
-require_relative 'services/job/repository'
+require_relative 'app/base/repository'
+require_relative 'app/event/repository'
+require_relative 'app/event/twitter'
+require_relative 'app/jobs'
+require_relative 'app/organizers'
+require_relative 'app/organizer_creator'
 
 task :default => :'server:up'
 
@@ -72,7 +75,6 @@ namespace :mongo do
   desc "Prepare database"
   task :prepare => :dotenv do
     require 'multi_json'
-    require 'mongo'
     require 'time'
 
     file = File.read('config/data/events.json')
@@ -80,24 +82,34 @@ namespace :mongo do
 
     event_repo = VLCTechHub::Event::Repository.new
     puts 'Filling events collection...'
-    event_repo.removeAll
+    event_repo.remove_all
     events.each do |event|
       event["date"] = DateTime.parse(event["date"] || DateTime.now.next_day.to_s)
       event_repo.insert(event)
     end
-    event_repo.publishAll
+    event_repo.publish_all
 
     file = File.read('config/data/jobs.json')
-    jobs = MultiJson.load(file)
+    job_lines = MultiJson.load(file)
 
-    job_repo = VLCTechHub::Job::Repository.new
+    jobs = VLCTechHub::Jobs.new
     puts 'Filling jobs collection...'
-    job_repo.removeAll
-    jobs.each do |job|
+    jobs.remove_all
+    job_lines.each do |job|
       job["date"] = DateTime.parse(job['date'] || DateTime.now.prev_month.next_day.to_s)
-      job_repo.insert(job)
+      jobs.insert(job)
     end
-    job_repo.publishAll
+    jobs.publish_all
+
+    file = File.read('config/data/organizers.json')
+    lines = MultiJson.load(file)
+
+    organizers = VLCTechHub::Organizers.new
+    puts 'Filling organizers collection...'
+    organizers.remove_all
+    lines.each do |line|
+      organizers.insert(line)
+    end
 
     puts 'Finished!'
   end
@@ -110,6 +122,27 @@ namespace :twitter do
     twitter = VLCTechHub::Event::Twitter.new
     today_events = repo.find_today_events
     twitter.tweet_today_events(today_events)
+  end
+
+end
+
+
+namespace :organizers do
+  task :create => :dotenv do
+    require 'multi_json'
+
+    file = File.read('config/data/hashtag.json')
+    handles = MultiJson.load(file)
+
+    organizers = VLCTechHub::Organizers.new
+    organizer_creator = VLCTechHub::OrganizerCreator.new
+
+    organizers.remove_all
+    handles.each do |handle|
+      next unless handle.start_with?('@')
+      organizer = organizer_creator.create(handle)
+      organizers.insert organizer
+    end
   end
 end
 

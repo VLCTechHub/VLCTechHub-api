@@ -1,9 +1,6 @@
-#$:.unshift File.dirname(__FILE__)
-require 'time'
-require 'date'
 require 'securerandom'
 
-require_relative 'entity/joboffer'
+require_relative 'entity/job_offer'
 
 module VLCTechHub
   module API
@@ -13,7 +10,7 @@ module VLCTechHub
 
         helpers do
           def jobs
-            @jobs ||= VLCTechHub::Job::Repository.new
+            @jobs ||= VLCTechHub::Jobs.new
           end
         end
 

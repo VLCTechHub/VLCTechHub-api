@@ -1,16 +1,18 @@
 require 'grape'
 require 'grape-entity'
 require 'json/ext'
-require 'mongo'
+
 
 require_relative 'config/environment'
 
-require_relative 'api/v1/event_routes'
-require_relative 'api/v1/job_routes'
-require_relative 'services/event/repository'
-require_relative 'services/event/twitter'
-require_relative 'services/event/mailer'
-require_relative 'services/job/repository'
+require_relative 'api/v1/routes'
+require_relative 'app/base/repository'
+require_relative 'app/event/repository'
+require_relative 'app/event/twitter'
+require_relative 'app/event/mailer'
+require_relative 'app/jobs'
+require_relative 'app/organizers'
+require_relative 'app/organizer_creator'
 
 module VLCTechHub
   module API
