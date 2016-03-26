@@ -18,7 +18,7 @@ module VLCTechHub
       end
 
       def find_latest_events
-         events = collection.find( { published: true, date: { :$lt => Time.now.utc } }).sort( {date: -1} ).limit(10)
+        collection.find( { published: true, date: { :$lt => Time.now.utc } }).sort( {date: -1} ).limit(10)
       end
 
       def find_today_events
@@ -28,7 +28,7 @@ module VLCTechHub
       def find_by_month(year, month)
         month = DateTime.new(year, month, 1)
         next_month = (month >> 1)
-        events = collection.find( { published: true, date: { :$gte => month.to_time.utc , :$lt => next_month.to_time.utc } }).sort( {date: 1} )
+        collection.find( { published: true, date: { :$gte => month.to_time.utc , :$lt => next_month.to_time.utc } }).sort( {date: 1} )
       end
 
       def insert(new_event)
@@ -39,9 +39,19 @@ module VLCTechHub
         new_event['published'] = false
         new_event['publish_id'] = SecureRandom.uuid
         new_event['created_at'] = created_at
-        new_event['slug'] = "#{new_event['title'].downcase.strip.gsub(/[^\w-]/, '-')}-#{created_at.to_i.to_s(16)}".squeeze('-')
+        new_event['slug'] = slug_for(new_event['title'], id)
         collection.insert_one(new_event)
         new_event
+      end
+
+      private
+
+      def slug_for(title, id)
+        id = id.to_s.chars
+        suffix = id.first(8).join + id.last(4).join
+        slug = ActiveSupport::Inflector.transliterate(title)
+        slug = "#{slug.downcase.strip.gsub(/[^\w-]/, '-')}-#{suffix}".squeeze('-')
+        slug.sub(/^-/, '')
       end
     end
   end
