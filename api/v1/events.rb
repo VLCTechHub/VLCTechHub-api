@@ -44,7 +44,7 @@ module VLCTechHub
 
           desc 'Retrieves an event'
           params do
-            requires :slug, type: String, regexp: /^[a-z][-a-z]*-[0-9a-f]{12}$/, desc: "The slug assigned to the event."
+            requires :slug, type: String, regexp: /^\w[\w-]*-[0-9a-f]{12}$/, desc: "The slug assigned to the event."
           end
           get '/:slug' do
             result = events.find_by_slug(params[:slug])
