@@ -42,6 +42,15 @@ module VLCTechHub
             present :events, result.to_a, with: Event
           end
 
+          desc 'Retrieves an event'
+          params do
+            requires :slug, type: String, regexp: /^\w[\w-]*-[0-9a-f]{12}$/, desc: "The slug assigned to the event."
+          end
+          get '/:slug' do
+            result = events.find_by_slug(params[:slug])
+            present :event, result, with: Event
+          end
+
           desc 'Create a  new event'
           params do
             group :event, type: Hash do
