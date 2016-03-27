@@ -2,7 +2,7 @@ module VLCTechHub
   module API
     module V1
       class Event < Grape::Entity
-        expose :id, :title, :description, :date, :link, :hashtag
+        expose :id, :title, :description, :date, :link, :hashtag, :slug
 
         private
 
