@@ -1,3 +1,5 @@
 .env
 /.bundle/
+/bin
+/backup
 /vendor/bundle
