@@ -13,6 +13,10 @@ module VLCTechHub
         collection.find( {publish_id: uuid} ).first
       end
 
+      def find_by_slug(slug)
+        collection.find( {slug: slug} ).first
+      end
+
       def find_future_events
         collection.find( { published: true, date: { :$gte => Time.now.utc } } ).sort( { date: 1 } )
       end

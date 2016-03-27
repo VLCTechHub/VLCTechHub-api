@@ -89,6 +89,29 @@ describe VLCTechHub::API::V1::Routes do
     end
   end
 
+  describe "GET /v1/events/:slug" do
+    subject(:event) { JSON.parse(last_response.body)['event'] }
+
+    let(:created_event) do
+      data = {
+          title: 'Title',
+          description: 'Description',
+          link: 'Link',
+          hashtag: 'hashtag',
+          date: '20010101T12:00:00Z'
+      }
+
+      post "/v1/events", {event: data}
+      event
+    end
+
+    it "returns the event" do
+      get "/v1/events/#{created_event['slug']}"
+      expect(last_response).to be_ok
+      expect(event).to eq(created_event)
+    end
+  end
+
   def past_events
     events.select { |e| past_event? e }
   end
