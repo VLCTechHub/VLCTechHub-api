@@ -27,6 +27,13 @@ How to run the tests
  - Run `rake test`
 
 
+How to use Docker containers for development
+---------------------------------------------
+
+ - Install [Docker Engine](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/).
+ - The first time you use it, you will need to build the containers: `docker-compose build`
+ - To start the container, just use `docker-compose up`
+
 --
 
 [![Build Status](https://travis-ci.org/VLCTechHub/VLCTechHub-api.svg?branch=master)](https://travis-ci.org/VLCTechHub/VLCTechHub-api)

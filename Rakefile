@@ -54,7 +54,7 @@ namespace :server do
       puts "\r\e[0KStopping ..."
       Rake::Task['server:down'].execute
     end
-    system "bundle exec rerun 'rackup -p $PORT -E $RACK_ENV'"
+    system "bundle exec rerun 'rackup -p $PORT -E $RACK_ENV -o 0.0.0.0'"
   end
   #desc "Stop API server"
   task :down do
