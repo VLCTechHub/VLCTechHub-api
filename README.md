@@ -18,13 +18,13 @@ How to use it
 How to restore dev database
 ----------------------------
 
- - Run `rake mongo:prepare`
+ - Run `bundle exec rake mongo:prepare`
 
 
 How to run the tests
 ---------------------
 
- - Run `rake test`
+ - Run `bundle exec rake test`
 
 
 How to use Docker containers for development

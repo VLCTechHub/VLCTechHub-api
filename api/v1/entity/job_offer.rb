@@ -25,6 +25,8 @@ module VLCTechHub
         end
 
         def company
+          return {} unless @object['company']
+
           {
             name: @object['company']['name'],
             link: @object['company']['link']
