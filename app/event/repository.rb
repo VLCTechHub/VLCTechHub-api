@@ -1,3 +1,6 @@
+require 'active_support'
+require 'active_support/core_ext'
+
 module VLCTechHub
   module Event
     class Repository < VLCTechHub::Base::Repository

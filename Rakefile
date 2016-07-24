@@ -3,6 +3,7 @@ require 'dotenv/tasks'
 
 require_relative 'config/environment'
 require_relative 'app/base/repository'
+require_relative 'app/twitter_client'
 require_relative 'app/event/repository'
 require_relative 'app/event/twitter'
 require_relative 'app/jobs'
