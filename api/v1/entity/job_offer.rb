@@ -25,11 +25,10 @@ module VLCTechHub
         end
 
         def company
-          return {} unless @object['company']
-
+          company = @object['company'] || {}
           {
-            name: @object['company']['name'],
-            link: @object['company']['link']
+            name: company['name'],
+            link: company['link']
           }
         end
 

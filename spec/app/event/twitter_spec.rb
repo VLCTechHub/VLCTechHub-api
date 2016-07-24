@@ -16,14 +16,14 @@ describe VLCTechHub::Event::Twitter do
       expect(twitter_api).to receive(:update)
         .with(string_that_includes(['a title', '#awesome', '01/12/2001']))
 
-      subject.update(event)
+      subject.new_event(event)
     end
 
     it 'sends a link back to vlctechhub' do
       expect(twitter_api).to receive(:update)
         .with(string_that_includes(['http://vlctechhub.org']))
 
-      subject.update(event)
+      subject.new_event(event)
     end
 
     xit 'supports long title' do
@@ -35,7 +35,7 @@ describe VLCTechHub::Event::Twitter do
       expect(twitter_api).to receive(:update)
         .with(string_that_includes(['Hoy', 'a title', '#awesome', '01:00']))
 
-      subject.tweet_today_events([event])
+      subject.today([event])
     end
   end
 end

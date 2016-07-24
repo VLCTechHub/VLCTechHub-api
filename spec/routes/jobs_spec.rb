@@ -77,7 +77,7 @@ describe VLCTechHub::API::V1::Routes do
 
     context 'Job is found' do
       it 'updates the record' do
-        allow(VLCTechHub::Job::Twitter).to receive(:tweet)
+        allow(VLCTechHub::Job::Twitter).to receive(:new_job)
         allow(VLCTechHub::Job::Mailer).to receive(:broadcast)
 
         expect(jobs_repo).to receive(:publish).
@@ -97,7 +97,7 @@ describe VLCTechHub::API::V1::Routes do
         allow(jobs_repo).to receive(:find_by_uuid).
           and_return(any_job)
 
-        expect(VLCTechHub::Job::Twitter).to receive(:tweet).
+        expect(VLCTechHub::Job::Twitter).to receive(:new_job).
           with(any_job)
         expect(VLCTechHub::Job::Mailer).to receive(:broadcast).
           with(any_job)

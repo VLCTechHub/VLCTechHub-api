@@ -15,16 +15,16 @@ describe VLCTechHub::Job::Twitter do
   describe '#tweet' do
     it 'sends a tweet with title ans company' do
       expect(twitter_api).to receive(:update)
-        .with(string_that_includes([job['title'], job['company']]))
+        .with(string_that_includes(['#ofertaDeEmpleo', job['title'], job['company']]))
 
-      subject.update(job)
+      subject.tweet(job)
     end
 
     it 'sends a link back to vlctechhub' do
       expect(twitter_api).to receive(:update)
         .with(string_that_includes(['http://vlctechhub.org/job/board/abc']))
 
-      subject.update(job)
+      subject.tweet(job)
     end
   end
 end

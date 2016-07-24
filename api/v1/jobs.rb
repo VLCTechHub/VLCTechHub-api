@@ -48,7 +48,7 @@ module VLCTechHub
 
               job = jobs.find_by_uuid(params[:uuid])
               VLCTechHub::Job::Mailer.broadcast(job)
-              VLCTechHub::Job::Twitter.tweet(job)
+              VLCTechHub::Job::Twitter.new_job(job)
 
               present :job, job, with: JobOffer
             end

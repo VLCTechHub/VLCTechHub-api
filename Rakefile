@@ -122,9 +122,8 @@ namespace :twitter do
     repo = VLCTechHub::Event::Repository.new
     twitter = VLCTechHub::Event::Twitter.new
     today_events = repo.find_today_events
-    twitter.tweet_today_events(today_events)
+    twitter.today(today_events)
   end
-
 end
 
 

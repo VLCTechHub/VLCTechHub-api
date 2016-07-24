@@ -6,16 +6,16 @@ module VLCTechHub
     class Twitter
       include VLCTechHub::TwitterClient
 
-      def self.tweet(event)
-        new.update(event)
+      def self.new_event(event)
+        new.new_event(event)
       end
 
-      def update(event)
+      def new_event(event)
         tweet("Nuevo Evento: #{hashtag event} #{event['title']} #{datetime event} http://vlctechhub.org")
       end
 
-      def tweet_today_events(today_events)
-        today_events.each do |event|
+      def today(events)
+        events.each do |event|
           tweet("Hoy #{hashtag event}a las #{time event}: #{event['title']} http://vlctechhub.org")
         end
       end

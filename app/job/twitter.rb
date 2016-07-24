@@ -3,12 +3,12 @@ module VLCTechHub
     class Twitter
       include VLCTechHub::TwitterClient
 
-      def self.tweet(attrs)
+      def self.new_job(attrs)
         new.tweet(attrs)
       end
 
-      def update(attrs)
-        tweet("Nueva #ofertaDeEmpleo: #{attrs['title']} #{attrs['company']}  http://vlctechhub.org/job/board/#{attrs['publish_id']}")
+      def tweet(attrs)
+        super("Nueva #ofertaDeEmpleo: #{attrs['title']} por #{attrs['company']}  http://vlctechhub.org/job/board/#{attrs['publish_id']}")
       end
     end
   end
