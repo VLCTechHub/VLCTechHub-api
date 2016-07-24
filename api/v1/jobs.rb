@@ -40,6 +40,19 @@ module VLCTechHub
 
             present :job, job, with: JobOffer
           end
+
+          resource 'publish' do
+            get '/:uuid' do
+              updated = jobs.publish(params[:uuid])
+              error!('404 Not found', 404) unless updated
+
+              job = jobs.find_by_uuid(params[:uuid])
+              VLCTechHub::Job::Mailer.broadcast(job)
+              VLCTechHub::Job::Twitter.tweet(job)
+
+              present :job, job, with: JobOffer
+            end
+          end
         end
       end
     end

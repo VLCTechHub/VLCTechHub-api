@@ -63,4 +63,48 @@ describe VLCTechHub::API::V1::Routes do
       post "/v1/jobs", {job: payload}
     end
   end
+
+  describe 'GET /v1/events/publish' do
+    context 'Job is not found' do
+      it 'returns 404 if not found' do
+        expect(jobs_repo).to receive(:publish).
+          and_return(false)
+
+        get '/v1/jobs/publish/not-found-id'
+        expect(last_response).to be_not_found
+      end
+    end
+
+    context 'Job is found' do
+      it 'updates the record' do
+        allow(VLCTechHub::Job::Twitter).to receive(:tweet)
+        allow(VLCTechHub::Job::Mailer).to receive(:broadcast)
+
+        expect(jobs_repo).to receive(:publish).
+          with('found-id').
+          and_return(true)
+        expect(jobs_repo).to receive(:find_by_uuid).
+          with('found-id').
+          and_return(any_job)
+
+        get "/v1/jobs/publish/found-id"
+        expect(last_response).to be_ok
+      end
+
+      it 'notifies to external services' do
+        allow(jobs_repo).to receive(:publish).
+          and_return(true)
+        allow(jobs_repo).to receive(:find_by_uuid).
+          and_return(any_job)
+
+        expect(VLCTechHub::Job::Twitter).to receive(:tweet).
+          with(any_job)
+        expect(VLCTechHub::Job::Mailer).to receive(:broadcast).
+          with(any_job)
+
+        get "/v1/jobs/publish/found-id"
+      end
+    end
+
+  end
 end
