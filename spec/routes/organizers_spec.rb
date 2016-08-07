@@ -13,7 +13,7 @@ describe VLCTechHub::API::V1::Routes do
       get '/v1/organizers/'
 
       expect(last_response).to be_ok
-      expect(organizers.size).to eq(TOTAL_JOBS_IN_CURRENT_MONTH_FROM_FIXTURES)
+      expect(organizers.size).to eq(TOTAL_ORGANIZERS_IN_CURRENT_MONTH_FROM_FIXTURES)
       organizer = organizers.first
       expect(organizer['hashtag']).to eq('@decharlas')
       expect(organizer['name']).to eq('decharlas')

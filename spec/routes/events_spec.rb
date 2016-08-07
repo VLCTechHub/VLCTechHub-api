@@ -81,7 +81,7 @@ describe VLCTechHub::API::V1::Routes do
 
         twitter = class_double("VLCTechHub::Event::Twitter").
           as_stubbed_const
-        expect(twitter).to receive(:tweet)
+        expect(twitter).to receive(:new_event)
 
         get "/v1/events/publish/found-id"
         expect(last_response).to be_ok

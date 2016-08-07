@@ -81,7 +81,7 @@ module VLCTechHub
 
                 event = events.find_by_uuid params[:uuid]
                 VLCTechHub::Event::Mailer.broadcast event
-                VLCTechHub::Event::Twitter.tweet event
+                VLCTechHub::Event::Twitter.new_event event
                 present :event, event, with: Event
             end
           end

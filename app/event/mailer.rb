@@ -1,7 +1,6 @@
 require 'mail'
 require 'tzinfo'
 
-
 module VLCTechHub
   module Event
     class Mailer

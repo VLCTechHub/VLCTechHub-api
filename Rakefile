@@ -3,6 +3,7 @@ require 'dotenv/tasks'
 
 require_relative 'config/environment'
 require_relative 'app/base/repository'
+require_relative 'app/twitter_client'
 require_relative 'app/event/repository'
 require_relative 'app/event/twitter'
 require_relative 'app/jobs'
@@ -121,9 +122,8 @@ namespace :twitter do
     repo = VLCTechHub::Event::Repository.new
     twitter = VLCTechHub::Event::Twitter.new
     today_events = repo.find_today_events
-    twitter.tweet_today_events(today_events)
+    twitter.today(today_events)
   end
-
 end
 
 

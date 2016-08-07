@@ -1,42 +1,26 @@
-require 'mongo'
-require 'twitter'
 require 'active_support'
 require 'active_support/core_ext'
 
 module VLCTechHub
   module Event
     class Twitter
+      include VLCTechHub::TwitterClient
 
-      def self.tweet(event)
-        Twitter.new.tweet(event)
+      def self.new_event(event)
+        new.new_event(event)
       end
 
-      def initialize(client = nil)
-        @client = client || ::Twitter::REST::Client.new do |config|
-          config.consumer_key        = ENV['TWITTER_CONSUMER_KEY']
-          config.consumer_secret     = ENV['TWITTER_CONSUMER_SECRET']
-          config.access_token        = ENV['TWITTER_ACCESS_TOKEN']
-          config.access_token_secret = ENV['TWITTER_ACCESS_SECRET']
-        end
+      def new_event(event)
+        tweet("Nuevo Evento: #{hashtag event} #{event['title']} #{datetime event} http://vlctechhub.org")
       end
 
-      def tweet(event)
-        tweet = "Nuevo Evento: #{hashtag event} #{event['title']} #{datetime event} http://vlctechhub.org"
-        send(tweet)
-      end
-
-      def tweet_today_events(today_events)
-        today_events.each do |event|
-          tweet = "Hoy #{hashtag event}a las #{time event}: #{event['title']} http://vlctechhub.org"
-          send(tweet)
+      def today(events)
+        events.each do |event|
+          tweet("Hoy #{hashtag event}a las #{time event}: #{event['title']} http://vlctechhub.org")
         end
       end
 
       private
-
-      def send(tweet)
-        @client.update(tweet)
-      end
 
       def hashtag(event)
         hashtag = event['hashtag'] || ''
