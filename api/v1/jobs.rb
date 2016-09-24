@@ -24,22 +24,23 @@ module VLCTechHub
             requires :job, type: Hash do
               requires :title, type: String
               requires :description, type: String
-              requires :link, type: String
+              optional :link, type: String
               requires :contact_email, type: String
               requires :company, type: Hash do
                 requires :name, type: String
                 requires :link, type: String
+                optional :twitter, type: String
               end
               requires :tags, type: Array
               requires :how_to_apply, type: String
-              requires :salary, type: String
+              optional :salary, type: String
             end
           end
           post do
             job = jobs.insert(declared(params)[:job])
             VLCTechHub::Job::Mailer.publish(job)
 
-            present :job, job, with: JobOffer
+            present :job, job, with: UnpublishedJobOffer
           end
 
           resource 'publish' do

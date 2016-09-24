@@ -5,7 +5,7 @@ module VLCTechHub
       month = DateTime.now
       previous_month = (month << 1)
       collection.find( { published: true,
-                         date: { :$gte => previous_month.to_time.utc}}).sort( {date: 1} )
+                         published_at: { :$gte => previous_month.to_time.utc}}).sort( {date: 1} )
     end
 
     def insert(job)

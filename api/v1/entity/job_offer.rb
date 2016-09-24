@@ -3,8 +3,8 @@ module VLCTechHub
     module V1
       class JobOffer < Grape::Entity
         expose  :id, :title, :description,
-                :tags, :company, :link,
-                :how_to_apply, :published_at, :salary
+          :tags, :company, :link,
+          :how_to_apply, :published_at, :salary
 
         private
 
@@ -46,6 +46,12 @@ module VLCTechHub
 
         def salary
           @object['salary']
+        end
+      end
+
+      class UnpublishedJobOffer < JobOffer
+        def id
+          Time.now.to_i
         end
       end
     end
