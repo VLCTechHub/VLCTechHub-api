@@ -42,6 +42,7 @@ describe VLCTechHub::API::V1::Routes do
         company: { name: 'the name', link: 'a link' },
         tags: ['a_tag', 'another_tag'],
         how_to_apply: 'more text',
+        contact_email: 'any email',
         salary: '123 euros'
       }
     }

@@ -25,6 +25,7 @@ module VLCTechHub
               requires :title, type: String
               requires :description, type: String
               requires :link, type: String
+              requires :contact_email, type: String
               requires :company, type: Hash do
                 requires :name, type: String
                 requires :link, type: String
