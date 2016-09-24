@@ -13,6 +13,10 @@ module VLCTechHub
       collection.find( {_id: id} ).first
     end
 
+    def find_by_uuid(uuid)
+      collection.find( {publish_id: uuid} ).first
+    end
+
     private
 
     def collection

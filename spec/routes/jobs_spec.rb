@@ -7,29 +7,33 @@ describe VLCTechHub::API::V1::Routes do
 
   let(:any_job) { {'publish_id' => 123} }
 
-  let(:jobs_repo) { double(:jobs) }
+  subject(:response_job) { JSON.parse(last_response.body)['job'] }
 
-  before(:each) do
+  def mock_repo
+    jobs_repo = double(:jobs)
     allow(VLCTechHub::Jobs).to receive(:new).and_return(jobs_repo)
+    jobs_repo
   end
 
   describe 'GET /v1/jobs' do
-    subject(:jobs) { JSON.parse(last_response.body)['jobs'] }
+    it 'returns a list of jobs' do
+      get '/v1/jobs/'
 
-    it 'returns all jobs in the last month' do
+      expect(last_response).to be_ok
+      jobs = JSON.parse(last_response.body)['jobs']
+      expect(jobs.first['id']).not_to be_nil
+    end
+
+    it 'returns latest jobs' do
+      jobs_repo = mock_repo
       expect(jobs_repo).to receive(:find_latest_jobs).
         and_return([any_job])
 
       get '/v1/jobs/'
-
-      expect(last_response).to be_ok
-      expect(jobs.first['id']).to eql('123')
     end
   end
 
   describe "POST /v1/jobs" do
-    subject(:response_job) { JSON.parse(last_response.body)['job'] }
-
     let(:payload) {
       {
         title: 'Title',
@@ -45,16 +49,14 @@ describe VLCTechHub::API::V1::Routes do
     it "creates a job offer and returns the created job" do
       allow(VLCTechHub::Job::Mailer).to receive(:publish)
 
-      expect(jobs_repo).to receive(:insert).
-        with(payload).
-        and_return(any_job)
-
       post "/v1/jobs", {job: payload}
+
       expect(last_response).to be_created
-      expect(response_job['id']).to eql('123')
+      expect(response_job['id']).to_not be_nil
     end
 
     it "calls the mailer" do
+      jobs_repo = mock_repo
       allow(jobs_repo).to receive(:insert).and_return(any_job)
 
       expect(VLCTechHub::Job::Mailer).to receive(:publish).
@@ -67,10 +69,8 @@ describe VLCTechHub::API::V1::Routes do
   describe 'GET /v1/events/publish' do
     context 'Job is not found' do
       it 'returns 404 if not found' do
-        expect(jobs_repo).to receive(:publish).
-          and_return(false)
-
         get '/v1/jobs/publish/not-found-id'
+
         expect(last_response).to be_not_found
       end
     end
@@ -79,19 +79,15 @@ describe VLCTechHub::API::V1::Routes do
       it 'updates the record' do
         allow(VLCTechHub::Job::Twitter).to receive(:new_job)
         allow(VLCTechHub::Job::Mailer).to receive(:broadcast)
+        job = VLCTechHub::Jobs.new.insert({text: 'javascript rockstar'})
 
-        expect(jobs_repo).to receive(:publish).
-          with('found-id').
-          and_return(true)
-        expect(jobs_repo).to receive(:find_by_uuid).
-          with('found-id').
-          and_return(any_job)
+        get "/v1/jobs/publish/#{job['publish_id'].to_s}"
 
-        get "/v1/jobs/publish/found-id"
-        expect(last_response).to be_ok
+        expect(response_job['published_at']).not_to be_nil
       end
 
       it 'notifies to external services' do
+        jobs_repo = mock_repo
         allow(jobs_repo).to receive(:publish).
           and_return(true)
         allow(jobs_repo).to receive(:find_by_uuid).
@@ -105,6 +101,5 @@ describe VLCTechHub::API::V1::Routes do
         get "/v1/jobs/publish/found-id"
       end
     end
-
   end
 end
