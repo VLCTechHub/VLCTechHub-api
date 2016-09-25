@@ -8,7 +8,7 @@ describe VLCTechHub::Event::Twitter do
       'hashtag' => '#awesome'
     }
   end
-  let(:twitter_api) { double(:twitter_api) }
+  let(:twitter_api) { double(:twitter_api, credentials: {a: 'b'}) }
   let(:subject) { described_class.new(twitter_api) }
 
   describe '#tweet' do

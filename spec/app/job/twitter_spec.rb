@@ -9,7 +9,7 @@ describe VLCTechHub::Job::Twitter do
     }
   end
 
-  let(:twitter_api) { double(:twitter_api) }
+  let(:twitter_api) { double(:twitter_api, credentials: {a: 'b'}) }
   let(:subject) { described_class.new(twitter_api) }
 
   describe '#tweet' do
