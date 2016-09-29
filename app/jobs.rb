@@ -5,12 +5,16 @@ module VLCTechHub
       month = DateTime.now
       previous_month = (month << 1)
       collection.find( { published: true,
-                         date: { :$gte => previous_month.to_time.utc}}).sort( {date: 1} )
+                         published_at: { :$gte => previous_month.to_time.utc}}).sort( {date: 1} )
     end
 
     def insert(job)
       id = collection.insert_one(hydrate(job)).inserted_id
       collection.find( {_id: id} ).first
+    end
+
+    def find_by_uuid(uuid)
+      collection.find( {publish_id: uuid} ).first
     end
 
     private

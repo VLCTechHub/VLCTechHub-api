@@ -12,7 +12,19 @@ module VLCTechHub
     end
 
     def tweet(text)
+      return unless credentials?
+
       @client.update(text)
+    end
+
+    private
+
+    def credentials?
+      @client.credentials.values.none?{ |v| blank?(v) }
+    end
+
+    def blank?(s)
+      s.respond_to?(:empty?) ? s.empty? : !s
     end
   end
 end

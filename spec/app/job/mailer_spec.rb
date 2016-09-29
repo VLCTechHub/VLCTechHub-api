@@ -8,7 +8,7 @@ describe VLCTechHub::Job::Mailer do
   let(:job) { {
     'title' => 'a title',
     'description' => 'a description',
-    'company' => 'canal cocina',
+    'company' => { 'name' => 'canal cocina'},
     'link' => 'http://anywhere.org' }
   }
 
@@ -49,7 +49,7 @@ describe VLCTechHub::Job::Mailer do
       expect(mail.subject).to include(job['title'])
       html_body = mail.body.parts.first.body.raw_source
       expect(html_body).to include(job['link'])
-      expect(html_body).to include(job['company'])
+      expect(html_body).to include(job['company']['name'])
     end
   end
 end

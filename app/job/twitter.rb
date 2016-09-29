@@ -8,7 +8,8 @@ module VLCTechHub
       end
 
       def tweet(attrs)
-        super("Nueva #ofertaDeEmpleo: #{attrs['title']} por #{attrs['company']}  http://vlctechhub.org/job/board/#{attrs['publish_id']}")
+        company = attrs['company']['twitter'] || attrs['company']['name']
+        super("Nueva #ofertaDeEmpleo: #{attrs['title']} por #{company}  http://vlctechhub.org/job/board/#{attrs['publish_id']}")
       end
     end
   end

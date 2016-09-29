@@ -16,14 +16,20 @@ module VLCTechHub
               content_type 'text/html; charset=UTF-8'
               body "<h1>#{job['title']}</h1>" +
                 "<pre>#{job['description']}</pre>" +
-                "<p>Company: #{job['company']}</p>" +
+                "<p>Keywords: #{job['tags']}</p>" +
+                "<p>Company Name: #{job['company']['name']}</p>" +
+                "<p>Company Link: #{job['company']['link']}</p>" +
+                "<p>Company Twitter: #{job['company']['twitter']}</p>" +
+                "<p>Salary: #{job['salary']}</p>" +
+                "<p>How to apply: #{job['how_to_apply']}</p>" +
+                "<p>Contact: #{job['contact_email']}</p>" +
                 "<p>Link: <a href='#{job['link']}'>#{job['link']}</a></p>" +
-                "<p><a href='http://api.vlctechhub.org/v1/events/publish/#{job['publish_id']}'>Publicar Oferta</a></p>"
+                "<p><a href='http://api.vlctechhub.org/v1/jobs/publish/#{job['publish_id']}'>Publicar Oferta</a></p>"
             end
           end
         end
 
-        def broadcast job
+        def broadcast(job)
           return false if ENV['EMAIL_FOR_BROADCAST'].to_s.empty?
 
           Mail.deliver do
@@ -34,7 +40,7 @@ module VLCTechHub
             html_part do
               content_type 'text/html; charset=UTF-8'
               body "<h1>#{job['title']}</h1>" +
-                "<h3>#{job['company']}</h3>" +
+                "<h3>#{job['company']['name']}</h3>" +
                 "<pre>#{job['description']}</pre>" +
                 "<p>Link: <a href='#{job['link']}'>#{job['link']}</a></p>"
             end
