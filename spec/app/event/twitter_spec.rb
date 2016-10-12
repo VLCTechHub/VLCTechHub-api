@@ -5,7 +5,8 @@ describe VLCTechHub::Event::Twitter do
     {
       'title' => 'a title',
       'date' => DateTime.new(2001,12,01),
-      'hashtag' => '#awesome'
+      'hashtag' => '#awesome',
+      'slug' => 'a-title'
     }
   end
   let(:twitter_api) { double(:twitter_api, credentials: {a: 'b'}) }
@@ -21,7 +22,7 @@ describe VLCTechHub::Event::Twitter do
 
     it 'sends a link back to vlctechhub' do
       expect(twitter_api).to receive(:update)
-        .with(string_that_includes(['http://vlctechhub.org']))
+        .with(string_that_includes(['http://vlctechhub.org/events/a-title']))
 
       subject.new_event(event)
     end
@@ -33,7 +34,7 @@ describe VLCTechHub::Event::Twitter do
   describe '#tweet_today_events' do
     it 'sends tweets with time and title' do
       expect(twitter_api).to receive(:update)
-        .with(string_that_includes(['Hoy', 'a title', '#awesome', '01:00']))
+        .with(string_that_includes(['Hoy', 'a title', '#awesome', '01:00', 'http://vlctechhub.org/events/a-title']))
 
       subject.today([event])
     end
