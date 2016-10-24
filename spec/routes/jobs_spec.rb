@@ -108,7 +108,7 @@ describe VLCTechHub::API::V1::Routes do
   end
 
   describe 'GET /v1/jobs/unpublish' do
-    context 'Job is not found' do
+    context 'Job is found' do
 
       it 'returns 404 if found but wrong secret' do
         job = VLCTechHub::Jobs.new.insert({text: 'javascript rockstar'})
@@ -119,16 +119,12 @@ describe VLCTechHub::API::V1::Routes do
 
     context 'Unpublish a job' do
 
-      job = VLCTechHub::Jobs.new.insert({text: 'javascript rockstar'})
-
-      it 'publishes the record' do
-        get "/v1/jobs/publish/#{job['publish_id'].to_s}"
-        expect(last_response).to be_ok
-      end
-
-      it 'updates publishes the record' do
+      job = VLCTechHub::Jobs.new.insert({published: true, text: 'javascript rockstar', published_at: DateTime.now})
+      it 'flags the job as not published' do
         get "/v1/jobs/unpublish/#{job['publish_id'].to_s}/secret/#{job['secret'].to_s}"
         expect(last_response).to be_ok
+        expect(response_job['published_at']).to be_nil
+
       end
     end
   end
