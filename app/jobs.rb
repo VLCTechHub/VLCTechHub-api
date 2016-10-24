@@ -28,6 +28,7 @@ module VLCTechHub
         j['published'] = false
         j['publish_id'] = SecureRandom.uuid
         j['created_at'] = DateTime.now
+        j['secret'] = SecureRandom.uuid
       }
     end
   end

@@ -47,6 +47,11 @@ module VLCTechHub
         def salary
           @object['salary']
         end
+
+        def secret
+          @object['secret']
+        end
+
       end
 
       class UnpublishedJobOffer < JobOffer
