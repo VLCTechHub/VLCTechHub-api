@@ -35,13 +35,13 @@ describe VLCTechHub::Base::Repository do
     end
 
     it 'flags the record as not published' do
-      job = { published: true, publish_id: 678, secret: 'the_secret' }
+      job = { published: true, publish_id: 678, secret: 'the_secret', published_at: DateTime.now }
       id = subject.db['jobs'].insert_one(job).inserted_id
 
       subject.unpublish(678, 'the_secret')
 
       updated = subject.db['jobs'].find({ _id: id }).first
-      expect(updated['published']).to eql(false)
+      expect(updated['published_at']).to be_nil
     end
 
   end

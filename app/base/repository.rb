@@ -31,7 +31,7 @@ module VLCTechHub
 
       def unpublish(uuid, secret)
         result = collection.update_one({ published: true, publish_id: uuid, secret: secret },
-                                       { "$set" => { published: false } } )
+                                       { "$set" => { published: false, published_at: nil } } )
         was_updated = (result.n == 1)
       end
 
