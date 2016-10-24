@@ -67,7 +67,7 @@ describe VLCTechHub::API::V1::Routes do
     end
   end
 
-  describe 'GET /v1/events/publish' do
+  describe 'GET /v1/jobs/publish' do
     context 'Job is not found' do
       it 'returns 404 if not found' do
         get '/v1/jobs/publish/not-found-id'
@@ -80,6 +80,7 @@ describe VLCTechHub::API::V1::Routes do
       it 'updates the record' do
         allow(VLCTechHub::Job::Twitter).to receive(:new_job)
         allow(VLCTechHub::Job::Mailer).to receive(:broadcast)
+        allow(VLCTechHub::Job::Mailer).to receive(:published)
         job = VLCTechHub::Jobs.new.insert({text: 'javascript rockstar'})
 
         get "/v1/jobs/publish/#{job['publish_id'].to_s}"
@@ -98,8 +99,36 @@ describe VLCTechHub::API::V1::Routes do
           with(any_job)
         expect(VLCTechHub::Job::Mailer).to receive(:broadcast).
           with(any_job)
+        expect(VLCTechHub::Job::Mailer).to receive(:published).
+          with(any_job)
 
         get "/v1/jobs/publish/found-id"
+      end
+    end
+  end
+
+  describe 'GET /v1/jobs/unpublish' do
+    context 'Job is not found' do
+
+      it 'returns 404 if found but wrong secret' do
+        job = VLCTechHub::Jobs.new.insert({text: 'javascript rockstar'})
+        get "/v1/jobs/unpublish/#{job['publish_id'].to_s}/secret/wrong_secret"
+        expect(last_response).to be_not_found
+      end
+    end
+
+    context 'Unpublish a job' do
+
+      job = VLCTechHub::Jobs.new.insert({text: 'javascript rockstar'})
+
+      it 'publishes the record' do
+        get "/v1/jobs/publish/#{job['publish_id'].to_s}"
+        expect(last_response).to be_ok
+      end
+
+      it 'updates publishes the record' do
+        get "/v1/jobs/unpublish/#{job['publish_id'].to_s}/secret/#{job['secret'].to_s}"
+        expect(last_response).to be_ok
       end
     end
   end
