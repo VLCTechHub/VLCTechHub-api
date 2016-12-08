@@ -62,9 +62,7 @@ module VLCTechHub
               unpublished = jobs.unpublish(params[:uuid],params[:secret])
               error!('404 Not found', 404) unless unpublished
 
-              job = jobs.find_by_uuid(params[:uuid])
-
-              present :job, job, with: JobOffer
+              { status: 'Job unpublished successfully.' }
             end
           end
         end
