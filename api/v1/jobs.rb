@@ -50,7 +50,19 @@ module VLCTechHub
 
               job = jobs.find_by_uuid(params[:uuid])
               VLCTechHub::Job::Mailer.broadcast(job)
+              VLCTechHub::Job::Mailer.published(job)
               VLCTechHub::Job::Twitter.new_job(job)
+
+              present :job, job, with: JobOffer
+            end
+          end
+
+          resource 'unpublish' do
+            get '/:uuid/secret/:secret' do
+              unpublished = jobs.unpublish(params[:uuid],params[:secret])
+              error!('404 Not found', 404) unless unpublished
+
+              job = jobs.find_by_uuid(params[:uuid])
 
               present :job, job, with: JobOffer
             end

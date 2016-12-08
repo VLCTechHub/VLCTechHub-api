@@ -16,6 +16,7 @@ describe VLCTechHub::Jobs do
       expect(result['published']).to eql(false)
       expect(result['publish_id']).not_to be_nil
       expect(result['created_at']).not_to be_nil
+      expect(result['secret']).not_to be_nil
     end
   end
 end
