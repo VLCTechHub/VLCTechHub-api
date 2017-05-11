@@ -31,9 +31,10 @@ How to use Docker containers for development
 ---------------------------------------------
 
  - Install [Docker Engine](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/).
- - The first time you use it, you will need to build the containers: `docker-compose build`
- - To start the container, just use `docker-compose up`
-
+ - `cp .env.docker .env`
+ - The first time you use it, you will need to build the containers: `docker-compose up`
+ - To start the container, just use `docker-compose start`
+ - Visit `http://localhost:5000`
 --
 
 [![Build Status](https://travis-ci.org/VLCTechHub/VLCTechHub-api.svg?branch=master)](https://travis-ci.org/VLCTechHub/VLCTechHub-api)
