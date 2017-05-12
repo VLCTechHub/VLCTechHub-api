@@ -122,9 +122,10 @@ describe VLCTechHub::API::V1::Routes do
       job = VLCTechHub::Jobs.new.insert({published: true, text: 'javascript rockstar', published_at: DateTime.now})
       it 'flags the job as not published' do
         get "/v1/jobs/unpublish/#{job['publish_id'].to_s}/secret/#{job['secret'].to_s}"
-        expect(last_response).to be_ok
-        expect(response_job['published_at']).to be_nil
 
+        expect(last_response).to be_ok
+        message = JSON.parse(last_response.body)['status']
+        expect(message).to eql 'Job unpublished successfully.'
       end
     end
   end
