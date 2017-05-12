@@ -35,6 +35,13 @@ How to use Docker containers for development
  - The first time you use it, you will need to build the containers: `docker-compose up`
  - To start the container, just use `docker-compose start`
  - Visit `http://localhost:5000`
+
+How to run tests on Docker
+--------------------------
+
+`docker exec -it vlctechhubapi_web_1 bundle exec rake test`
+
+
 --
 
 [![Build Status](https://travis-ci.org/VLCTechHub/VLCTechHub-api.svg?branch=master)](https://travis-ci.org/VLCTechHub/VLCTechHub-api)
