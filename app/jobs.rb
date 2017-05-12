@@ -9,6 +9,7 @@ module VLCTechHub
     end
 
     def insert(job)
+      job = correct(job)
       id = collection.insert_one(hydrate(job)).inserted_id
       collection.find( {_id: id} ).first
     end
@@ -21,6 +22,17 @@ module VLCTechHub
 
     def collection
       db['jobs']
+    end
+
+    def correct(job)
+      return job if job[:link].nil?
+
+      link_misses_protocol = !job[:link].match(/^https?:\/\//)
+      if link_misses_protocol
+        job[:link] = "http://#{job[:link]}"
+      end
+
+      job
     end
 
     def hydrate(job)
