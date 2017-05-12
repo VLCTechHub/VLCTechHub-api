@@ -1,5 +1,6 @@
 require 'bundler/setup'
 require 'dotenv/tasks'
+require 'rspec/core/rake_task'
 
 require_relative 'config/environment'
 require_relative 'app/base/repository'
@@ -146,15 +147,20 @@ namespace :organizers do
   end
 end
 
+
 namespace :spec do
-  #desc "Prepare test environment"
+  desc "Prepare test environment"
   task :prepare => :dotenv do
     VLCTechHub.environment = :test
     puts "Ensure the target database is up and running ..."
   end
 
-  #desc "Run spec tests"
+  desc "Run spec tests"
   task :run, [:file] => [:prepare, 'mongo:prepare'] do |t, args|
-    system "bundle exec rspec #{args[:file]} --color --format progress"
+    RSpec::Core::RakeTask.new(:spec) do |t|
+      t.rspec_opts = "--color --format progress"
+    end
+
+    Rake::Task['spec'].execute
   end
 end
