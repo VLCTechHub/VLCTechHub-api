@@ -1,6 +1,5 @@
 require 'bundler/setup'
 require 'dotenv/tasks'
-require 'rspec/core/rake_task'
 
 require_relative 'config/environment'
 require_relative 'app/base/repository'
@@ -157,6 +156,7 @@ namespace :spec do
 
   desc "Run spec tests"
   task :run, [:file] => [:prepare, 'mongo:prepare'] do |t, args|
+    require 'rspec/core/rake_task'
     RSpec::Core::RakeTask.new(:spec) do |t|
       t.rspec_opts = "--color --format progress"
     end
