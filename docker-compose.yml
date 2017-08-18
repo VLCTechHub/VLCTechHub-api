@@ -12,6 +12,6 @@ services:
     links:
      - mongo
   mongo:
-    image: mongo:3.2.11
+    image: mongo:3.4.7
     ports:
      - "27017:27017"
