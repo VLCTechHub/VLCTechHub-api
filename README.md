@@ -9,7 +9,7 @@ How to use it
  - Clone the project `git clone git@github.com:VLCTechHub/VLCTechHub-api.git`
  - Install ruby 2.4.1 (you might want to install it with [rbenv](https://www.digitalocean.com/community/tutorials/how-to-install-ruby-on-rails-with-rbenv-on-ubuntu-14-04))
  - Install mongo (optional, you can use a remote service)
- - Install bundle & run `bundle install`
+ - Install bundler with `gem install bundler` & run `bundle install`
  - Build the project with `bundle exec rake build`
  - Configure your mongo connection uris in `.env` (not necesary if you use local mongo with default values)
  - Run `bundle exec rake up`
@@ -39,7 +39,7 @@ How to use Docker containers for development
 How to run tests on Docker
 --------------------------
 
-`docker exec -it vlctechhubapi_web_1 bundle exec rake test`
+`docker exec -it vlctechhub-api_web_1 bundle exec rake test`
 
 
 --
