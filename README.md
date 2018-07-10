@@ -7,7 +7,7 @@ How to use it
 -------------
 
  - Clone the project `git clone git@github.com:VLCTechHub/VLCTechHub-api.git`
- - Install ruby 2.4.1 (you might want to install it with [rbenv](https://www.digitalocean.com/community/tutorials/how-to-install-ruby-on-rails-with-rbenv-on-ubuntu-14-04))
+ - Install ruby 2.6.4 (you might want to install it with [rbenv](https://github.com/rbenv/rbenv))
  - Install mongo (optional, you can use a remote service)
  - Install bundler with `gem install bundler` & run `bundle install`
  - Build the project with `bundle exec rake build`
