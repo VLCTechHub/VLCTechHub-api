@@ -1,4 +1,5 @@
 require_relative 'base'
+require 'dotenv/load'
 
 require 'newrelic_rpm' if VLCTechHub.production?
 

@@ -1,5 +1,4 @@
 require 'bundler/setup'
-require 'dotenv/tasks'
 
 require_relative 'config/environment'
 require_relative 'app/base/repository'
@@ -50,7 +49,7 @@ end
 
 namespace :server do
   #desc "Start API server"
-  task :up => :dotenv do
+  task :up do
     trap ("SIGINT") do
       puts "\r\e[0KStopping ..."
       Rake::Task['server:down'].execute
@@ -65,7 +64,7 @@ end
 
 namespace :mongo do
   #desc "Connect to database shell"
-  task :connect => :dotenv do
+  task :connect do
     require 'uri'
     uri = URI.parse(ENV['MONGODB_URI'])
     username = uri.user ? "-u #{uri.user}" : ""
@@ -74,7 +73,7 @@ namespace :mongo do
   end
 
   desc "Prepare database"
-  task :prepare => :dotenv do
+  task :prepare do
     require 'multi_json'
     require 'time'
 
@@ -117,8 +116,8 @@ namespace :mongo do
 end
 
 namespace :twitter do
-  #dec "Tweet events scheduled today"
-  task :tweet => :dotenv do
+  #desc "Tweet events scheduled today"
+  task :tweet do
     repo = VLCTechHub::Event::Repository.new
     twitter = VLCTechHub::Event::Twitter.new
     today_events = repo.find_today_events
@@ -128,7 +127,7 @@ end
 
 
 namespace :organizers do
-  task :create => :dotenv do
+  task :create do
     require 'multi_json'
 
     file = File.read('config/data/hashtag.json')
@@ -149,7 +148,7 @@ end
 
 namespace :spec do
   desc "Prepare test environment"
-  task :prepare => :dotenv do
+  task :prepare do
     VLCTechHub.environment = :test
     puts "Ensure the target database is up and running ..."
   end
