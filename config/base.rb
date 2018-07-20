@@ -5,5 +5,7 @@ module VLCTechHub
     def development?; environment == :development end
     def production?;  environment == :production  end
     def test?;        environment == :test        end
+    def db_client= client; @db_client = client end
+    def db_client; @db_client end
   end
 end

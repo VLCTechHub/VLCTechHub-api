@@ -4,13 +4,8 @@ module VLCTechHub
   module Base
     class Repository
 
-      def initialize
-        @uri =  VLCTechHub.test? ? ENV['TEST_MONGODB_URI'] : ENV['MONGODB_URI']
-        Mongo::Logger.logger.level = ::Logger::FATAL unless ::VLCTechHub.development?
-      end
-
       def db
-        @db ||= Mongo::Client.new(@uri)
+        VLCTechHub.db_client
       end
 
       def collection
