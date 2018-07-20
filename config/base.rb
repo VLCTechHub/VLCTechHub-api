@@ -1,3 +1,6 @@
+require 'dotenv/load'
+require 'mongo'
+
 module VLCTechHub
   class << self
     def environment; (ENV['RACK_ENV'] || :development).to_sym end
@@ -5,7 +8,11 @@ module VLCTechHub
     def development?; environment == :development end
     def production?;  environment == :production  end
     def test?;        environment == :test        end
-    def db_client= client; @db_client = client end
-    def db_client; @db_client end
+    def db_client; @cl end
+    def db_client
+      @db_client ||= Mongo::Client.new(VLCTechHub.test? ? ENV['TEST_MONGODB_URI'] : ENV['MONGODB_URI'])
+    end
   end
 end
+
+Mongo::Logger.logger.level = ::Logger::FATAL unless VLCTechHub.development?

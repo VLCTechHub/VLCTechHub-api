@@ -1,5 +1,4 @@
 require_relative 'base'
-require 'dotenv/load'
 
 require 'newrelic_rpm' if VLCTechHub.production?
 
@@ -18,7 +17,3 @@ Mail.defaults do
       :enable_starttls_auto => true
     }
 end
-
-require 'mongo'
-Mongo::Logger.logger.level = ::Logger::FATAL unless VLCTechHub.development?
-VLCTechHub.db_client = Mongo::Client.new(VLCTechHub.test? ? ENV['TEST_MONGODB_URI'] : ENV['MONGODB_URI'])
