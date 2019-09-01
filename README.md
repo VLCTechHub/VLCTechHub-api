@@ -1,49 +1,40 @@
-VLCTechHub API
-==============
+[![Build Status](https://travis-ci.org/VLCTechHub/VLCTechHub-api.svg?branch=master)](https://travis-ci.org/VLCTechHub/VLCTechHub-api)
+
+# VLCTechHub API
 
 Public API for VLCTechHub
 
-How to use it
--------------
+## How to use it
 
- - Clone the project `git clone git@github.com:VLCTechHub/VLCTechHub-api.git`
- - Install ruby 2.6.4 (you might want to install it with [rbenv](https://github.com/rbenv/rbenv))
- - Install mongo (optional, you can use a remote service)
- - Install bundler with `gem install bundler` & run `bundle install`
- - Build the project with `bundle exec rake build`
- - Configure your mongo connection uris in `.env` (not necesary if you use local mongo with default values)
- - Run `bundle exec rake up`
- - Visit `http://localhost:5000`
+-   Clone the project `git clone git@github.com:VLCTechHub/VLCTechHub-api.git`
+-   Install Ruby 2.6.4 (you might want to install it with [rbenv](https://github.com/rbenv/rbenv))
+-   Install MongoDB (optional, you can use a remote service)
+-   Install dependencies by running `bundle install`
+-   Create a local `.env` file from the included `.env.example` file
+-   Configure your mongo connection uris (not necesary if you use local mongo with default values) and optionally the rest of environment values in the `.env` file
+-   Run `bundle exec rake up`
+-   Visit `http://localhost:5000`
 
-How to restore dev database
-----------------------------
+### How to restore the dev database
 
- - Run `bundle exec rake mongo:prepare`
+-   Run `bundle exec rake mongo:prepare`
 
+### How to run the tests
 
-How to run the tests
----------------------
+-   Run `bundle exec rake test`
 
- - Run `bundle exec rake test`
+## How to use Docker containers for development
 
+-   Install [Docker Engine](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/).
+-   The first time you use it, you will need to build the app containers: `docker-compose build`
+-   Optionally, create a local `.env` file for the environment values without default values in the `docker-compose.yml` file
+-   To start the containers, just use `docker-compose up`
+-   Visit `http://localhost:5000`
 
-How to use Docker containers for development
----------------------------------------------
+### How to restore the dev database on Docker
 
- - Install [Docker Engine](https://docs.docker.com/engine/installation/) and [Docker Compose](https://docs.docker.com/compose/install/).
- - `cp .env.docker .env`
- - The first time you use it, you will need to build the containers: `docker-compose up`
- - To start the container, just use `docker-compose start`
- - Visit `http://localhost:5000`
+-   With the containers running, execute `docker-compose exec api bundle exec rake mongo:prepare`
 
-How to run tests on Docker
---------------------------
+### How to run the tests on Docker
 
-`docker exec -it vlctechhub-api_web_1 bundle exec rake test`
-
-
---
-
-[![Build Status](https://travis-ci.org/VLCTechHub/VLCTechHub-api.svg?branch=master)](https://travis-ci.org/VLCTechHub/VLCTechHub-api)
-
-
+-   With the containers running, execute `docker-compose exec api bundle exec rake test`

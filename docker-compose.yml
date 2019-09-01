@@ -1,17 +1,51 @@
-version: '2'
+version: "3.7"
+
 services:
-  web:
+  api:
     build: .
-    command: ./start.sh
-    ports:
-     - "5000:5000"
+    image: vlctechhub/api:latest
     volumes:
-     - .:/app
-    depends_on:
-     - mongo
-    links:
-     - mongo
-  mongo:
-    image: mongo:3.4.7
+      - type: bind
+        source: .
+        target: /app
+        consistency: delegated
+      - type: volume
+        source: bundle
+        target: /usr/local/bundle
+    tmpfs:
+      - /app/tmp:exec
     ports:
-     - "27017:27017"
+      - "5000:5000"
+    networks:
+      default:
+        aliases:
+          - api.vlctechhub.local
+    environment:
+      - RACK_ENV=development
+      - PORT=5000
+      - MONGODB_URI=mongodb://mongo:27017/vlctechhub-dev
+      - TEST_MONGODB_URI=mongodb://mongo:27017/vlctechhub-test
+      - SENDGRID_PASSWORD
+      - SENDGRID_USERNAME
+      - EMAIL_FOR_PUBLICATION
+      - EMAIL_FOR_BROADCAST
+      - TWITTER_CONSUMER_KEY
+      - TWITTER_CONSUMER_SECRET
+      - TWITTER_ACCESS_TOKEN
+      - TWITTER_ACCESS_SECRET
+      - NEW_RELIC_LICENSE_KEY
+    depends_on:
+      - mongo
+    command:
+      ["bash", "-c", "(bundle check || bundle install) && bundle exec rake up"]
+
+  mongo:
+    image: mongo:3.6.12
+    volumes:
+      - type: volume
+        source: data
+        target: /data/db
+
+volumes:
+  data:
+  bundle:

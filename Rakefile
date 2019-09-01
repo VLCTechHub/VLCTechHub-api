@@ -48,13 +48,17 @@ task :routes do
 end
 
 namespace :server do
+  def running_in_docker?; system "[ -f /.dockerenv ]"; end
+
   #desc "Start API server"
   task :up do
-    trap ("SIGINT") do
-      puts "\r\e[0KStopping ..."
-      Rake::Task['server:down'].execute
+    unless running_in_docker?
+      trap "SIGINT" do
+        puts "\r\e[0KStopping ..."
+        Rake::Task['server:down'].execute
+      end
     end
-    system "bundle exec rerun 'rackup -p $PORT -E $RACK_ENV -o 0.0.0.0'"
+    system "bundle exec rerun --background 'rackup -p $PORT -E $RACK_ENV -o 0.0.0.0'"
   end
   #desc "Stop API server"
   task :down do

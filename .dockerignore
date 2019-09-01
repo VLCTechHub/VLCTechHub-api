@@ -1,0 +1,9 @@
+*
+!api
+!app
+!config
+!helpers
+!boot.rb
+!config.ru
+!Gemfile
+!Gemfile.lock
