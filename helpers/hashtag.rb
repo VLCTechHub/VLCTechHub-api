@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module VLCTechHub
   module Helper
     module Hashtag
@@ -5,9 +7,8 @@ module VLCTechHub
         hashtag = word || ''
         hashtag = hashtag.strip.split[0] || ''
         return hashtag if hashtag.empty?
-        if !hashtag.start_with?('#') && !hashtag.start_with?('@')
-          hashtag = '#' << hashtag
-        end
+
+        hashtag = '#' + hashtag if !hashtag.start_with?('#') && !hashtag.start_with?('@')
         hashtag
       end
     end

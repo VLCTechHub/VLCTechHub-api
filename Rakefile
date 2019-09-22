@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'bundler/setup'
 
 require_relative 'config/environment'
@@ -9,74 +11,75 @@ require_relative 'app/jobs'
 require_relative 'app/organizers'
 require_relative 'app/organizer_creator'
 
-task :default => :'server:up'
+task default: :'server:up'
 
-desc "Build the project"
+desc 'Build the project'
 task :build do
   puts 'Creating .env file...'
   cp '.env.example', '.env'
   puts 'Build done!'
 end
 
-desc "Start API server"
-task :up => :'server:up'
+desc 'Start API server'
+task up: :'server:up'
 
-desc "Stop API server"
-task :down => :'server:down'
+desc 'Stop API server'
+task down: :'server:down'
 
-desc "Connect to database console"
-task :mongo => :'mongo:connect'
+desc 'Connect to database console'
+task mongo: :'mongo:connect'
 
-desc "Tweet events scheduled today"
-task :tweet => :'twitter:tweet'
+desc 'Tweet events scheduled today'
+task tweet: :'twitter:tweet'
 
-desc "Run spec tests"
-task :test => :'spec:run'
+desc 'Run spec tests'
+task test: :'spec:run'
 
-desc "List API routes"
+desc 'List API routes'
 task :routes do
   require './boot'
   VLCTechHub::API::Boot.routes.each do |endpoint|
     next if endpoint.route_method.nil?
+
     method = endpoint.route_method.ljust(10)
     path = endpoint.route_path
-    if endpoint.route_version
-      path.sub!(":version", endpoint.route_version)
-    end
+    path.sub!(':version', endpoint.route_version) if endpoint.route_version
     puts "\t#{method} #{path}"
   end
 end
 
 namespace :server do
-  def running_in_docker?; system "[ -f /.dockerenv ]"; end
+  def running_in_docker?
+    system '[ -f /.dockerenv ]'
+  end
 
-  #desc "Start API server"
+  # desc "Start API server"
   task :up do
     unless running_in_docker?
-      trap "SIGINT" do
+      trap 'SIGINT' do
         puts "\r\e[0KStopping ..."
         Rake::Task['server:down'].execute
       end
     end
     system "bundle exec rerun --background 'rackup -p $PORT -E $RACK_ENV -o 0.0.0.0'"
   end
-  #desc "Stop API server"
+  # desc "Stop API server"
   task :down do
-    system "pkill -9 -f rackup"
+    system 'pkill -9 -f rackup'
   end
 end
 
 namespace :mongo do
-  #desc "Connect to database shell"
+  # desc "Connect to database shell"
   task :connect do
     require 'uri'
     uri = URI.parse(ENV['MONGODB_URI'])
-    username = uri.user ? "-u #{uri.user}" : ""
-    password = uri.password ? "-p #{uri.password}" : ""
+    username = uri.user ? "-u #{uri.user}" : ''
+    password = uri.password ? "-p #{uri.password}" : ''
     system "mongo #{username} #{password} #{uri.host}:#{uri.port}#{uri.path}"
   end
 
-  desc "Prepare database"
+  desc 'Prepare database'
   task :prepare do
     require 'multi_json'
     require 'time'
@@ -88,7 +91,7 @@ namespace :mongo do
     puts 'Filling events collection...'
     event_repo.remove_all
     events.each do |event|
-      event["date"] = DateTime.parse(event["date"] || DateTime.now.next_day.to_s)
+      event['date'] = DateTime.parse(event['date'] || DateTime.now.next_day.to_s)
       event_repo.insert(event)
     end
     event_repo.publish_all
@@ -100,7 +103,7 @@ namespace :mongo do
     puts 'Filling jobs collection...'
     jobs.remove_all
     job_lines.each do |job|
-      job["date"] = DateTime.parse(job['date'] || DateTime.now.prev_month.next_day.to_s)
+      job['date'] = DateTime.parse(job['date'] || DateTime.now.prev_month.next_day.to_s)
       jobs.insert(job)
     end
     jobs.publish_all
@@ -120,7 +123,7 @@ namespace :mongo do
 end
 
 namespace :twitter do
-  #desc "Tweet events scheduled today"
+  # desc "Tweet events scheduled today"
   task :tweet do
     repo = VLCTechHub::Event::Repository.new
     twitter = VLCTechHub::Event::Twitter.new
@@ -128,7 +131,6 @@ namespace :twitter do
     twitter.today(today_events)
   end
 end
-
 
 namespace :organizers do
   task :create do
@@ -143,25 +145,25 @@ namespace :organizers do
     organizers.remove_all
     handles.each do |handle|
       next unless handle.start_with?('@')
+
       organizer = organizer_creator.create(handle)
       organizers.insert organizer
     end
   end
 end
 
-
 namespace :spec do
-  desc "Prepare test environment"
+  desc 'Prepare test environment'
   task :prepare do
     VLCTechHub.environment = :test
-    puts "Ensure the target database is up and running ..."
+    puts 'Ensure the target database is up and running ...'
   end
 
-  desc "Run spec tests"
-  task :run, [:file] => [:prepare, 'mongo:prepare'] do |t, args|
+  desc 'Run spec tests'
+  task :run, [:file] => [:prepare, 'mongo:prepare'] do |_t, _args|
     require 'rspec/core/rake_task'
     RSpec::Core::RakeTask.new(:spec) do |t|
-      t.rspec_opts = "--color --format progress"
+      t.rspec_opts = '--color --format progress'
     end
 
     Rake::Task['spec'].execute

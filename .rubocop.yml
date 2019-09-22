@@ -1,0 +1,49 @@
+require:
+  - rubocop-rspec
+
+AllCops:
+  Exclude:
+    - "bin/**/*"
+    - "tmp/**/*"
+    - "vendor/**/*"
+  TargetRubyVersion: 2.6
+
+Layout/IndentFirstArgument:
+  Enabled: false
+
+Layout/MultilineMethodCallIndentation:
+  Enabled: false
+
+Layout/MultilineOperationIndentation:
+  Enabled: false
+
+Layout/SpaceInsideStringInterpolation:
+  Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - "**/api/v1/*.rb"
+    - "**/spec/**/*.rb"
+    - "**/Rakefile"
+
+Metrics/LineLength:
+  Max: 120
+
+Metrics/MethodLength:
+  Max: 20
+
+Naming/PredicateName:
+  Exclude:
+    - "**/entity/*.rb"
+
+RSpec/ExampleLength:
+  Max: 15
+
+RSpec/FilePath:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false

@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require 'grape'
 require 'grape-entity'
 require 'json/ext'
-
 
 require_relative 'config/environment'
 
@@ -22,9 +23,7 @@ module VLCTechHub
     class Boot < Grape::API
       format :json
 
-      get do
-        [{ version: "v1" }]
-      end
+      get { [{ version: 'v1' }] }
 
       mount VLCTechHub::API::V1::Routes
 

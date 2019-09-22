@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module VLCTechHub
   class Organizers < VLCTechHub::Base::Repository
     def collection
@@ -5,11 +7,11 @@ module VLCTechHub
     end
 
     def find_with_handle
-      collection.find({ hashtag:  {  :$regex => /^@/i } })
+      collection.find(hashtag: { '$regex' => /^@/i })
     end
 
     def find_with_hashtag
-      collection.find({ hashtag:  {  :$regex => /^#/i } })
+      collection.find(hashtag: { '$regex' => /^#/i })
     end
 
     def insert(organizer)

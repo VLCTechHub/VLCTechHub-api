@@ -1,26 +1,27 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
-
 describe VLCTechHub::OrganizerCreator do
+  subject(:organizer_creator) { described_class.new(twitter_client) }
+
+  let(:twitter_client) { instance_double(::Twitter::REST::Client) }
+
   let(:fake_twitter_user) do
-    double(:fake_twitter_user,
-      name: 'a name',
-      description: 'a description',
-      profile_image_url: 'an url',
-      website?: true,
-      website: 'a website')
+    instance_double(
+      ::Twitter::User,
+      name: 'a name', description: 'a description', profile_image_url: 'an url', website?: true, website: 'a website'
+    )
   end
 
   it 'returns the basic profile from twitter' do
-
     handle = '@a_handle'
 
-    twitter_client = double(:twitter_client)
-    expect(twitter_client).to receive(:user)
-        .with(handle).and_return(fake_twitter_user)
+    allow(twitter_client).to receive(:user).with(handle).and_return(fake_twitter_user)
 
-    subject = described_class.new(twitter_client)
-    organizer = subject.create(handle)
+    organizer = organizer_creator.create(handle)
+
+    expect(twitter_client).to have_received(:user)
 
     expect(organizer[:hashtag]).to eq(handle)
     expect(organizer[:name]).to eq(fake_twitter_user.name)

@@ -1,10 +1,10 @@
+# frozen_string_literal: true
+
 module VLCTechHub
   module API
     module V1
       class JobOffer < Grape::Entity
-        expose  :id, :title, :description,
-          :tags, :company, :link,
-          :how_to_apply, :published_at, :salary
+        expose :id, :title, :description, :tags, :company, :link, :how_to_apply, :published_at, :salary
 
         private
 
@@ -26,10 +26,7 @@ module VLCTechHub
 
         def company
           company = @object['company'] || {}
-          {
-            name: company['name'],
-            link: company['link']
-          }
+          { name: company['name'], link: company['link'] }
         end
 
         def link
@@ -51,7 +48,6 @@ module VLCTechHub
         def secret
           @object['secret']
         end
-
       end
 
       class UnpublishedJobOffer < JobOffer

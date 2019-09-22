@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module VLCTechHub
   module API
     module V1
@@ -7,7 +9,8 @@ module VLCTechHub
         private
 
         def id
-          return @object['_id'].to_s unless  @object['publish_id']
+          return @object['_id'].to_s unless @object['publish_id']
+
           @object['publish_id'].to_s
         end
 
@@ -20,7 +23,7 @@ module VLCTechHub
         end
 
         def date
-          @object["date"].iso8601
+          @object['date'].iso8601
         end
 
         def link

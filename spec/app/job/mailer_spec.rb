@@ -1,32 +1,31 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe VLCTechHub::Job::Mailer do
-  before do
-    Mail::TestMailer.deliveries.clear
+  before { Mail::TestMailer.deliveries.clear }
+
+  let(:job) do
+    {
+      'title' => 'a title',
+      'description' => 'a description',
+      'company' => { 'name' => 'canal cocina' },
+      'link' => 'http://anywhere.org',
+      'contact_email' => 'pub@email.any'
+    }
   end
 
-  let(:job) { {
-    'title' => 'a title',
-    'description' => 'a description',
-    'company' => { 'name' => 'canal cocina'},
-    'link' => 'http://anywhere.org',
-    'contact_email' => 'pub@email.any'}
-  }
-
   describe '#publish' do
-    before do
-      ENV['EMAIL_FOR_PUBLICATION'] = 'pub@email.any'
-    end
-    after do
-      ENV['EMAIL_FOR_PUBLICATION'] = ''
-    end
+    before { ENV['EMAIL_FOR_PUBLICATION'] = 'pub@email.any' }
+
+    after { ENV['EMAIL_FOR_PUBLICATION'] = '' }
 
     it 'delivers a formatted mail' do
       described_class.publish job
 
       mail = Mail::TestMailer.deliveries.first
-      expect(mail.from).to eq(['vlctechhub@gmail.com'])
-      expect(mail.to).to eq(['pub@email.any'])
+      expect(mail.from).to eq(%w[vlctechhub@gmail.com])
+      expect(mail.to).to eq(%w[pub@email.any])
       expect(mail.subject).to include(job['title'])
       html_body = mail.body.parts.first.body.raw_source
       expect(html_body).to include(job['link'])
@@ -34,19 +33,16 @@ describe VLCTechHub::Job::Mailer do
   end
 
   describe '#broadcast' do
-    before do
-      ENV['EMAIL_FOR_BROADCAST'] = 'cast@email.any'
-    end
-    after do
-      ENV['EMAIL_FOR_BROADCAST'] = ''
-    end
+    before { ENV['EMAIL_FOR_BROADCAST'] = 'cast@email.any' }
+
+    after { ENV['EMAIL_FOR_BROADCAST'] = '' }
 
     it 'delivers a formatted mail' do
       described_class.broadcast(job)
 
       mail = Mail::TestMailer.deliveries.first
-      expect(mail.from).to eq(['vlctechhub@gmail.com'])
-      expect(mail.to).to eq(['cast@email.any'])
+      expect(mail.from).to eq(%w[vlctechhub@gmail.com])
+      expect(mail.to).to eq(%w[cast@email.any])
       expect(mail.subject).to include(job['title'])
       html_body = mail.body.parts.first.body.raw_source
       expect(html_body).to include(job['link'])
@@ -55,13 +51,12 @@ describe VLCTechHub::Job::Mailer do
   end
 
   describe '#published' do
-
     it 'delivers a formatted mail with unpublish link' do
       described_class.published job
 
       mail = Mail::TestMailer.deliveries.first
-      expect(mail.from).to eq(['vlctechhub@gmail.com'])
-      expect(mail.to).to eq(['pub@email.any'])
+      expect(mail.from).to eq(%w[vlctechhub@gmail.com])
+      expect(mail.to).to eq(%w[pub@email.any])
       expect(mail.subject).to include(job['title'])
       html_body = mail.body.parts.first.body.raw_source
       expect(html_body).to include(job['link'])

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'securerandom'
 
 require_relative 'entity/job_offer'
@@ -59,7 +61,7 @@ module VLCTechHub
 
           resource 'unpublish' do
             get '/:uuid/secret/:secret' do
-              unpublished = jobs.unpublish(params[:uuid],params[:secret])
+              unpublished = jobs.unpublish(params[:uuid], params[:secret])
               error!('404 Not found', 404) unless unpublished
 
               { status: 'Job unpublished successfully.' }

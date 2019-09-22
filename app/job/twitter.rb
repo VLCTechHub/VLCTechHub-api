@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module VLCTechHub
   module Job
     class Twitter
@@ -9,7 +11,16 @@ module VLCTechHub
 
       def tweet(attrs)
         company = attrs['company']['twitter'] || attrs['company']['name']
-        super("Nueva #ofertaDeEmpleo: #{attrs['title']} por #{company}  http://vlctechhub.org/job/board/#{attrs['publish_id']}")
+        super(
+          "Nueva #ofertaDeEmpleo: #{attrs['title']} por #{company} " \
+            "#{jobs_endpoint}/#{attrs['publish_id']}"
+        )
+      end
+
+      private
+
+      def jobs_endpoint
+        'https://vlctechhub.org/job/board'
       end
     end
   end

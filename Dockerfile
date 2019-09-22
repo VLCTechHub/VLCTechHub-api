@@ -1,5 +1,12 @@
 FROM ruby:2.6.4
 
+RUN set set -ex \
+  && curl -sL https://deb.nodesource.com/setup_10.x | bash - \
+  && apt-get update -qq && apt-get install -qq --no-install-recommends \
+       nodejs \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
 RUN gem update --system 3.0.6
 
 ENV app /app

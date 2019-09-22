@@ -1,15 +1,16 @@
+# frozen_string_literal: true
+
 module VLCTechHub
   module API
     module V1
       class Organizer < Grape::Entity
-        expose :id, :hashtag, :is_handle,
-               :name, :description,
-               :profile_image_small_url, :profile_image_big_url
+        expose :id, :hashtag, :is_handle, :name, :description, :profile_image_small_url, :profile_image_big_url
 
         private
 
         def id
-          return @object['_id'].to_s unless  @object['publish_id']
+          return @object['_id'].to_s unless @object['publish_id']
+
           @object['publish_id'].to_s
         end
 
@@ -35,6 +36,7 @@ module VLCTechHub
 
         def is_handle
           return true if @object['hashtag'][0] == '@'
+
           false
         end
       end
