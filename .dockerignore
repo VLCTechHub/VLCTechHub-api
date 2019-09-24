@@ -1,6 +1,6 @@
 *
 !api
-!app
+!lib
 !config
 !helpers
 !boot.rb

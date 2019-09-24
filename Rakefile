@@ -3,13 +3,13 @@
 require 'bundler/setup'
 
 require_relative 'config/environment'
-require_relative 'app/base/repository'
-require_relative 'app/twitter_client'
-require_relative 'app/event/repository'
-require_relative 'app/event/twitter'
-require_relative 'app/jobs'
-require_relative 'app/organizers'
-require_relative 'app/organizer_creator'
+require_relative 'lib/base/repository'
+require_relative 'lib/twitter_client'
+require_relative 'lib/event/repository'
+require_relative 'lib/event/twitter'
+require_relative 'lib/jobs'
+require_relative 'lib/organizers'
+require_relative 'lib/organizer_creator'
 
 task default: :'server:up'
 
