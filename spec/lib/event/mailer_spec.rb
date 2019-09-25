@@ -5,17 +5,15 @@ require 'spec_helper'
 describe VLCTechHub::Event::Mailer do
   before do
     Mail::TestMailer.deliveries.clear
-    ENV['EMAIL_FOR_BROADCAST'] = 'broadcast@email.any'
+    stub_const('ENV', ENV.to_hash.merge('EMAIL_FOR_BROADCAST' => 'broadcast@email.any'))
   end
-
-  after { ENV['EMAIL_FOR_BROADCAST'] = '' }
 
   describe '.broadcast' do
     let(:event) do
       {
         'title' => 'a title',
         'description' => 'a description',
-        'date' => DateTime.new(2_001, 12, 0o1),
+        'date' => DateTime.new(2_001, 12, 1),
         'link' => 'http://anywhere.org'
       }
     end

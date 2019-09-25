@@ -55,6 +55,10 @@ module VLCTechHub
         new_event
       end
 
+      def all
+        collection.find(published: true).sort(date: 1)
+      end
+
       private
 
       def slug_for(title, id)

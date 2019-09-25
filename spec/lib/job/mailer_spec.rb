@@ -15,10 +15,8 @@ describe VLCTechHub::Job::Mailer do
     }
   end
 
-  describe '#publish' do
-    before { ENV['EMAIL_FOR_PUBLICATION'] = 'pub@email.any' }
-
-    after { ENV['EMAIL_FOR_PUBLICATION'] = '' }
+  describe '.publish' do
+    before { stub_const('ENV', ENV.to_hash.merge('EMAIL_FOR_PUBLICATION' => 'pub@email.any')) }
 
     it 'delivers a formatted mail' do
       described_class.publish job
@@ -32,10 +30,8 @@ describe VLCTechHub::Job::Mailer do
     end
   end
 
-  describe '#broadcast' do
-    before { ENV['EMAIL_FOR_BROADCAST'] = 'cast@email.any' }
-
-    after { ENV['EMAIL_FOR_BROADCAST'] = '' }
+  describe '.broadcast' do
+    before { stub_const('ENV', ENV.to_hash.merge('EMAIL_FOR_BROADCAST' => 'cast@email.any')) }
 
     it 'delivers a formatted mail' do
       described_class.broadcast(job)

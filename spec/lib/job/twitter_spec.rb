@@ -12,7 +12,7 @@ describe VLCTechHub::Job::Twitter do
   let(:twitter_api) { instance_spy(::Twitter::REST::Client, credentials: { a: 'b' }) }
 
   describe '#tweet' do
-    it 'sends a tweet with title ans company' do
+    it 'sends a tweet with title and company' do
       twitter.tweet(job)
 
       expect(twitter_api).to have_received(:update).with(
