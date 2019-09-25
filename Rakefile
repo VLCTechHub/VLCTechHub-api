@@ -2,6 +2,8 @@
 
 require 'bundler/setup'
 
+require 'rspec/core/rake_task'
+
 require_relative 'config/environment'
 require_relative 'lib/base/repository'
 require_relative 'lib/twitter_client'
@@ -33,7 +35,7 @@ desc 'Tweet events scheduled today'
 task tweet: :'twitter:tweet'
 
 desc 'Run spec tests'
-task test: :'spec:run'
+task test: :'test:run'
 
 desc 'List API routes'
 task :routes do
@@ -152,19 +154,17 @@ namespace :organizers do
   end
 end
 
-namespace :spec do
+namespace :test do
+  VLCTechHub.environment = :test
+
   desc 'Prepare test environment'
   task :prepare do
-    VLCTechHub.environment = :test
-    puts 'Ensure the target database is up and running ...'
+    Rake::Task['mongo:prepare'].execute
   end
 
   desc 'Run spec tests'
-  task :run, [:file] => [:prepare, 'mongo:prepare'] do |_t, _args|
-    require 'rspec/core/rake_task'
-    RSpec::Core::RakeTask.new(:spec) do |t|
-      t.rspec_opts = '--color --format progress'
-    end
+  task :run, [:file] do |_t, _args|
+    RSpec::Core::RakeTask.new(:spec) { |t| t.rspec_opts = '--color --format progress' }
 
     Rake::Task['spec'].execute
   end
