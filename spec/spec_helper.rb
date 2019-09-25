@@ -2,18 +2,27 @@
 
 require 'rspec'
 require 'rack/test'
+
 require_relative '../boot'
 
 RSpec.configure do |config|
   config.include Rack::Test::Methods
-  config.mock_with :rspec do |mocks|
-    # This option should be set when all dependencies are being loaded
-    # before a spec run, as is the case in a typical spec helper. It will
-    # cause any verifying double instantiation for a class that does not
-    # exist to raise, protecting against incorrectly spelt names.
-    mocks.verify_doubled_constant_names =
-      true
+
+  config.expect_with :rspec do |expectations|
+    expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end
+
+  config.mock_with :rspec do |mocks|
+    mocks.verify_partial_doubles = true
+    mocks.verify_doubled_constant_names = true
+  end
+
+  config.shared_context_metadata_behavior = :apply_to_host_groups
+  config.filter_run_when_matching :focus
+  config.example_status_persistence_file_path = 'spec/examples.txt'
+
+  config.order = :random
+  Kernel.srand config.seed
 end
 
 RSpec::Matchers.define :string_that_includes do |strings|

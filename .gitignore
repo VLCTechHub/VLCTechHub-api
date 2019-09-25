@@ -2,6 +2,7 @@
 /.bundle/
 /bin
 /backup
+/spec/examples.txt
 /vendor/bundle
 
 ### Vim ###
