@@ -39,11 +39,11 @@ desc 'List API routes'
 task :routes do
   require './boot'
   VLCTechHub::API::Boot.routes.each do |endpoint|
-    next if endpoint.route_method.nil?
+    next if endpoint.request_method.nil?
 
-    method = endpoint.route_method.ljust(10)
-    path = endpoint.route_path
-    path.sub!(':version', endpoint.route_version) if endpoint.route_version
+    method = endpoint.request_method.ljust(10)
+    path = endpoint.path
+    path.sub!(':version', endpoint.version) if endpoint.version
     puts "\t#{method} #{path}"
   end
 end
