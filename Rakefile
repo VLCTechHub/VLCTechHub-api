@@ -55,7 +55,7 @@ namespace :server do
     system '[ -f /.dockerenv ]'
   end
 
-  # desc "Start API server"
+  desc 'Start API server'
   task :up do
     unless running_in_docker?
       trap 'SIGINT' do
@@ -65,14 +65,15 @@ namespace :server do
     end
     system "bundle exec rerun --background 'rackup -p $PORT -E $RACK_ENV -o 0.0.0.0'"
   end
-  # desc "Stop API server"
+
+  desc 'Stop API server'
   task :down do
     system 'pkill -9 -f rackup'
   end
 end
 
 namespace :mongo do
-  # desc "Connect to database shell"
+  desc 'Connect to database shell'
   task :connect do
     require 'uri'
     uri = URI.parse(ENV['MONGODB_URI'])
@@ -116,16 +117,14 @@ namespace :mongo do
     organizers = VLCTechHub::Organizers.new
     puts 'Filling organizers collection...'
     organizers.remove_all
-    lines.each do |line|
-      organizers.insert(line)
-    end
+    lines.each { |line| organizers.insert(line) }
 
     puts 'Finished!'
   end
 end
 
 namespace :twitter do
-  # desc "Tweet events scheduled today"
+  desc 'Tweet events scheduled today'
   task :tweet do
     repo = VLCTechHub::Event::Repository.new
     twitter = VLCTechHub::Event::Twitter.new
