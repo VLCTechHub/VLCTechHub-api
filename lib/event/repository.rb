@@ -22,6 +22,10 @@ module VLCTechHub
         collection.find(slug: slug).first
       end
 
+      def find_past_events
+        collection.find(published: true, date: { '$lt' => Time.now.utc }).sort(date: -1)
+      end
+
       def find_future_events
         collection.find(published: true, date: { '$gte' => Time.now.utc }).sort(date: 1)
       end
@@ -32,6 +36,14 @@ module VLCTechHub
 
       def find_today_events
         collection.find(published: true, date: { '$gte' => Time.now.utc, '$lte' => 1.day.from_now.utc.midnight })
+      end
+
+      def find_by_year(year)
+        year = DateTime.new(year, 1, 1)
+        next_year = (year >> 1)
+        collection.find(published: true, date: { '$gte' => year.to_time.utc, '$lt' => next_year.to_time.utc }).sort(
+          date: 1
+        )
       end
 
       def find_by_month(year, month)

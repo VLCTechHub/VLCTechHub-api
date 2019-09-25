@@ -23,6 +23,7 @@ Layout/SpaceInsideStringInterpolation:
 Metrics/BlockLength:
   Exclude:
     - "**/api/v1/*.rb"
+    - "**/api/v2/*.rb"
     - "**/spec/**/*.rb"
     - "**/Rakefile"
 

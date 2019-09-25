@@ -7,6 +7,8 @@ require 'json/ext'
 require_relative 'config/environment'
 
 require_relative 'api/v1/routes'
+require_relative 'api/v2/routes'
+
 require_relative 'lib/base/repository'
 require_relative 'lib/twitter_client'
 require_relative 'lib/event/repository'
@@ -26,6 +28,7 @@ module VLCTechHub
       get { [{ version: 'v1' }] }
 
       mount VLCTechHub::API::V1::Routes
+      mount VLCTechHub::API::V2::Routes
 
       route :any, '*path' do
         error!('404 Not found', 404)
