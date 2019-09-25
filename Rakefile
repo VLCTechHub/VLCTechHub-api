@@ -13,11 +13,11 @@ require_relative 'lib/organizer_creator'
 
 task default: :'server:up'
 
-desc 'Build the project'
-task :build do
+desc 'Set up the project environment'
+task :setenv do
   puts 'Creating .env file...'
   cp '.env.example', '.env'
-  puts 'Build done!'
+  puts 'Set up done!'
 end
 
 desc 'Start API server'

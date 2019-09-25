@@ -1,7 +1,7 @@
 language: ruby
 script:
- - bundle exec rake build
- - bundle exec rake test
+  - bundle exec rake setenv
+  - bundle exec rake test
 bundler_args: --without production
 services:
   - mongodb
