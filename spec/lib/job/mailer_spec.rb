@@ -46,7 +46,7 @@ describe VLCTechHub::Job::Mailer do
     end
   end
 
-  describe '#published' do
+  describe '.published' do
     it 'delivers a formatted mail with unpublish link' do
       described_class.published job
 
