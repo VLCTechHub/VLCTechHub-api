@@ -54,8 +54,8 @@ module VLCTechHub
         )
       end
 
-      def insert(new_event)
-        id = collection.insert_one(with_defaults(new_event)).inserted_id
+      def insert(event)
+        id = collection.insert_one(with_defaults(event)).inserted_id
         collection.find(_id: id).first
       end
 
