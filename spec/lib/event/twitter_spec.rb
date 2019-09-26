@@ -11,7 +11,7 @@ describe VLCTechHub::Event::Twitter do
 
   let(:twitter_api) { instance_spy(::Twitter::REST::Client, credentials: { a: 'b' }) }
 
-  describe '#tweet' do
+  describe '#new_event' do
     it 'sends a tweet with date, hashtag and title' do
       twitter.new_event(event)
 
@@ -27,7 +27,7 @@ describe VLCTechHub::Event::Twitter do
     end
   end
 
-  describe '#tweet_today_events' do
+  describe '#today' do
     it 'sends tweets with time and title' do
       twitter.today([event])
 

@@ -11,9 +11,9 @@ describe VLCTechHub::Job::Twitter do
 
   let(:twitter_api) { instance_spy(::Twitter::REST::Client, credentials: { a: 'b' }) }
 
-  describe '#tweet' do
+  describe '#new_job' do
     it 'sends a tweet with title and company' do
-      twitter.tweet(job)
+      twitter.new_job(job)
 
       expect(twitter_api).to have_received(:update).with(
         string_that_includes(['#ofertaDeEmpleo', job['title'], job['company']['name']])
@@ -21,7 +21,7 @@ describe VLCTechHub::Job::Twitter do
     end
 
     it 'sends a link back to vlctechhub' do
-      twitter.tweet(job)
+      twitter.new_job(job)
 
       expect(twitter_api).to have_received(:update).with(string_that_includes(%w[https://vlctechhub.org/job/board/abc]))
     end

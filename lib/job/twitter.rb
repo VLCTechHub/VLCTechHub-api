@@ -5,15 +5,15 @@ module VLCTechHub
     class Twitter
       include VLCTechHub::Twitter::RestClient
 
-      def self.new_job(attrs)
-        new.tweet(attrs)
+      def self.new_job(job)
+        new.new_job(job)
       end
 
-      def tweet(attrs)
-        company = attrs['company']['twitter'] || attrs['company']['name']
-        super(
-          "Nueva #ofertaDeEmpleo: #{attrs['title']} por #{company} " \
-            "#{jobs_endpoint}/#{attrs['publish_id']}"
+      def new_job(job)
+        company = job['company']['twitter'] || job['company']['name']
+        tweet(
+          "Nueva #ofertaDeEmpleo: #{job['title']} por #{company} " \
+            "#{jobs_endpoint}/#{job['publish_id']}"
         )
       end
 
