@@ -9,16 +9,20 @@ require_relative 'config/environment'
 require_relative 'api/v1/routes'
 require_relative 'api/v2/routes'
 
+require_relative 'lib/twitter/rest_client'
+
 require_relative 'lib/base/repository'
-require_relative 'lib/twitter_client'
+
+require_relative 'lib/event/mailer'
 require_relative 'lib/event/repository'
 require_relative 'lib/event/twitter'
-require_relative 'lib/event/mailer'
+
 require_relative 'lib/job/mailer'
+require_relative 'lib/job/repository'
 require_relative 'lib/job/twitter'
-require_relative 'lib/jobs'
-require_relative 'lib/organizers'
-require_relative 'lib/organizer_creator'
+
+require_relative 'lib/organizer/creator'
+require_relative 'lib/organizer/repository'
 
 module VLCTechHub
   module API

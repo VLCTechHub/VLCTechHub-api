@@ -3,7 +3,7 @@
 module VLCTechHub
   module Job
     class Twitter
-      include VLCTechHub::TwitterClient
+      include VLCTechHub::Twitter::RestClient
 
       def self.new_job(attrs)
         new.tweet(attrs)

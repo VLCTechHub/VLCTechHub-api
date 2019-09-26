@@ -5,13 +5,18 @@ require 'bundler/setup'
 require 'rspec/core/rake_task'
 
 require_relative 'config/environment'
+
+require_relative 'lib/twitter/rest_client'
+
 require_relative 'lib/base/repository'
-require_relative 'lib/twitter_client'
+
 require_relative 'lib/event/repository'
 require_relative 'lib/event/twitter'
-require_relative 'lib/jobs'
-require_relative 'lib/organizers'
-require_relative 'lib/organizer_creator'
+
+require_relative 'lib/job/repository'
+
+require_relative 'lib/organizer/creator'
+require_relative 'lib/organizer/repository'
 
 task default: :'server:up'
 
@@ -102,7 +107,7 @@ namespace :mongo do
     file = File.read('config/data/jobs.json')
     job_lines = MultiJson.load(file)
 
-    jobs = VLCTechHub::Jobs.new
+    jobs = VLCTechHub::Job::Repository.new
     puts 'Filling jobs collection...'
     jobs.remove_all
     job_lines.each do |job|
@@ -114,7 +119,7 @@ namespace :mongo do
     file = File.read('config/data/organizers.json')
     lines = MultiJson.load(file)
 
-    organizers = VLCTechHub::Organizers.new
+    organizers = VLCTechHub::Organizer::Repository.new
     puts 'Filling organizers collection...'
     organizers.remove_all
     lines.each { |line| organizers.insert(line) }
@@ -140,8 +145,8 @@ namespace :organizers do
     file = File.read('config/data/hashtag.json')
     handles = MultiJson.load(file)
 
-    organizers = VLCTechHub::Organizers.new
-    organizer_creator = VLCTechHub::OrganizerCreator.new
+    organizers = VLCTechHub::Organizer::Repository.new
+    organizer_creator = VLCTechHub::Organizer::Creator.new
 
     organizers.remove_all
     handles.each do |handle|

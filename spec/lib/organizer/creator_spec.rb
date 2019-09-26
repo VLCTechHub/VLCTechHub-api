@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe VLCTechHub::OrganizerCreator do
+describe VLCTechHub::Organizer::Creator do
   subject(:organizer_creator) { described_class.new(twitter_client) }
 
   let(:twitter_client) { instance_double(::Twitter::REST::Client) }

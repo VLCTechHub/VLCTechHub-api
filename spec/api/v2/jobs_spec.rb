@@ -65,7 +65,7 @@ describe VLCTechHub::API::V2::Routes do
   describe 'GET /v2/jobs/approve/:uuid' do
     subject(:job) { JSON.parse(last_response.body) }
 
-    let(:some_job_offer_pending_approval) { VLCTechHub::Jobs.new.insert(text: 'javascript rockstar') }
+    let(:some_job_offer_pending_approval) { VLCTechHub::Job::Repository.new.insert(text: 'javascript rockstar') }
 
     it 'approves the job offer' do
       get "/v2/jobs/approve/#{some_job_offer_pending_approval['publish_id']}"
@@ -92,7 +92,7 @@ describe VLCTechHub::API::V2::Routes do
     subject(:response) { JSON.parse(last_response.body) }
 
     let(:some_published_job_offer) do
-      VLCTechHub::Jobs.new.insert(published: true, text: 'javascript rockstar', published_at: DateTime.now)
+      VLCTechHub::Job::Repository.new.insert(published: true, text: 'javascript rockstar', published_at: DateTime.now)
     end
 
     it 'unpublishes the job offer' do

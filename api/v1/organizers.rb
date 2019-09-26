@@ -11,7 +11,7 @@ module VLCTechHub
         resource 'organizers' do
           helpers do
             def organizers
-              @organizers ||= VLCTechHub::Organizers.new
+              @organizers ||= VLCTechHub::Organizer::Repository.new
             end
           end
 

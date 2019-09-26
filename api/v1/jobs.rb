@@ -12,7 +12,7 @@ module VLCTechHub
 
         helpers do
           def jobs
-            @jobs ||= VLCTechHub::Jobs.new
+            @jobs ||= VLCTechHub::Job::Repository.new
           end
         end
 

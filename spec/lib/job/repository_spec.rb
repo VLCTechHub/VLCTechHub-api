@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-describe VLCTechHub::Jobs do
+describe VLCTechHub::Job::Repository do
   subject(:jobs) { described_class.new }
 
   describe '#insert' do

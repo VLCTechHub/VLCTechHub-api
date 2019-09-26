@@ -66,7 +66,7 @@ describe VLCTechHub::API::V1::Routes do
     subject(:job) { JSON.parse(last_response.body)['job'] }
 
     let(:some_unpublished_job_offer) do
-      VLCTechHub::Jobs.new.insert(
+      VLCTechHub::Job::Repository.new.insert(
         title: 'javascript rockstar',
         company: { name: 'the name', link: 'a link' },
         description: 'the description',
@@ -110,7 +110,7 @@ describe VLCTechHub::API::V1::Routes do
     subject(:response) { JSON.parse(last_response.body) }
 
     let(:some_published_job_offer) do
-      VLCTechHub::Jobs.new.insert(
+      VLCTechHub::Job::Repository.new.insert(
         published: true,
         title: 'javascript rockstar',
         company: { name: 'the name', link: 'a link' },

@@ -6,7 +6,7 @@ require 'active_support/core_ext'
 module VLCTechHub
   module Event
     class Twitter
-      include VLCTechHub::TwitterClient
+      include VLCTechHub::Twitter::RestClient
 
       def self.new_event(event)
         new.new_event(event)
