@@ -40,7 +40,7 @@ module VLCTechHub
 
       def find_by_year(year)
         year = DateTime.new(year, 1, 1)
-        next_year = (year >> 1)
+        next_year = (year >> 12)
         collection.find(published: true, date: { '$gte' => year.to_time.utc, '$lt' => next_year.to_time.utc }).sort(
           date: 1
         )
@@ -55,16 +55,8 @@ module VLCTechHub
       end
 
       def insert(new_event)
-        new_event.stringify_keys!
-        id = BSON::ObjectId.new
-        created_at = id.generation_time
-        new_event['_id'] = id
-        new_event['published'] = false
-        new_event['publish_id'] = SecureRandom.uuid
-        new_event['created_at'] = created_at
-        new_event['slug'] = slug_for(new_event['title'], id)
-        collection.insert_one(new_event)
-        new_event
+        id = collection.insert_one(with_defaults(new_event)).inserted_id
+        collection.find(_id: id).first
       end
 
       def all
@@ -79,6 +71,18 @@ module VLCTechHub
         slug = ActiveSupport::Inflector.transliterate(title)
         slug = "#{slug.downcase.strip.gsub(/[^\w-]/, '-')}-#{suffix}".squeeze('-')
         slug.sub(/^-/, '')
+      end
+
+      def with_defaults(event)
+        id = BSON::ObjectId.new
+        event.stringify_keys!
+        event.dup.tap do |e|
+          e['_id'] = id
+          e['published'] = false
+          e['publish_id'] = SecureRandom.uuid
+          e['created_at'] = id.generation_time
+          e['slug'] = slug_for(e['title'], id)
+        end
       end
     end
   end

@@ -11,7 +11,7 @@ module VLCTechHub
 
       def insert(job)
         job = correct(job)
-        id = collection.insert_one(hydrate(job)).inserted_id
+        id = collection.insert_one(with_defaults(job)).inserted_id
         collection.find(_id: id).first
       end
 
@@ -34,7 +34,7 @@ module VLCTechHub
         job
       end
 
-      def hydrate(job)
+      def with_defaults(job)
         job.dup.tap do |j|
           j['published'] = false
           j['publish_id'] = SecureRandom.uuid

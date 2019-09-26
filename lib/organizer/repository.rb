@@ -16,11 +16,18 @@ module VLCTechHub
       end
 
       def insert(organizer)
-        organizer.stringify_keys!
-        organizer['published'] = true
-        organizer['publish_id'] = SecureRandom.uuid
-        organizer['created_at'] = DateTime.now
-        collection.insert_one(organizer)
+        id = collection.insert_one(with_defaults(organizer)).inserted_id
+        collection.find(_id: id).first
+      end
+
+      private
+
+      def with_defaults(organizer)
+        organizer.dup.tap do |o|
+          o['published'] = true
+          o['publish_id'] = SecureRandom.uuid
+          o['created_at'] = DateTime.now
+        end
       end
     end
   end
