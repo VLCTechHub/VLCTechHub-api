@@ -1,7 +1,10 @@
 language: ruby
+rvm:
+  - 2.6.4
 script:
   - bundle exec rake setenv
-  - bundle exec rake test
+  - bundle exec rake test:prepare
+  - bundle exec rake test:run
 bundler_args: --without production
 services:
   - mongodb
