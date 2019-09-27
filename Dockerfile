@@ -18,10 +18,9 @@ RUN bundle install
 
 COPY . $app/
 
-ENV HOST=0.0.0.0
 ENV RACK_ENV=production
 ENV PORT=80
 
 EXPOSE $PORT
 
-CMD bundle exec puma -e $RACK_ENV -p $PORT
+CMD bundle exec puma -C '-' -e $RACK_ENV -p $PORT
