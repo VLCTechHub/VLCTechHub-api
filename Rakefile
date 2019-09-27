@@ -159,17 +159,16 @@ namespace :organizers do
 end
 
 namespace :test do
-  VLCTechHub.environment = :test
-
   desc 'Prepare test environment'
   task :prepare do
+    VLCTechHub.environment = :test
     Rake::Task['mongo:prepare'].execute
   end
 
   desc 'Run spec tests'
   task :run, [:file] do |_t, _args|
+    VLCTechHub.environment = :test
     RSpec::Core::RakeTask.new(:spec) { |t| t.rspec_opts = '--color --format progress' }
-
     Rake::Task['spec'].execute
   end
 end
