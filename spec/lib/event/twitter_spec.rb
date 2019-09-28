@@ -5,24 +5,24 @@ require 'spec_helper'
 describe VLCTechHub::Event::Twitter do
   subject(:twitter) { described_class.new(twitter_api) }
 
-  let(:event) do
-    { 'title' => 'a title', 'date' => DateTime.new(2_001, 12, 1), 'hashtag' => '#awesome', 'slug' => 'a-title' }
-  end
+  let(:event) { create(:event) }
 
-  let(:twitter_api) { instance_spy(::Twitter::REST::Client, credentials: { a: 'b' }) }
+  let(:twitter_api) { instance_spy(::Twitter::REST::Client, credentials: { some: 'credentials' }) }
 
   describe '#new_event' do
     it 'sends a tweet with date, hashtag and title' do
       twitter.new_event(event)
 
-      expect(twitter_api).to have_received(:update).with(string_that_includes(['a title', '#awesome', '01/12/2001']))
+      expect(twitter_api).to have_received(:update).with(
+        string_that_includes([event['title'], event['hashtag'], event['date'].strftime('%d/%m/%Y')])
+      )
     end
 
     it 'sends a link back to vlctechhub' do
       twitter.new_event(event)
 
       expect(twitter_api).to have_received(:update).with(
-        string_that_includes(%w[https://vlctechhub.org/events/a-title])
+        string_that_includes(["https://vlctechhub.org/events/#{event['slug']}"])
       )
     end
   end
@@ -32,7 +32,15 @@ describe VLCTechHub::Event::Twitter do
       twitter.today([event])
 
       expect(twitter_api).to have_received(:update).with(
-        string_that_includes(['Hoy', 'a title', '#awesome', '01:00', 'https://vlctechhub.org/events/a-title'])
+        string_that_includes(
+          [
+            'Hoy',
+            event['title'],
+            event['hashtag'],
+            event['date'].in_time_zone('Madrid').strftime('%H:%M'),
+            "https://vlctechhub.org/events/#{event['slug']}"
+          ]
+        )
       )
     end
   end

@@ -8,32 +8,46 @@ describe VLCTechHub::API::V1::Routes do
   end
 
   let(:request_time) { Time.now.utc }
+  let(:repo) { VLCTechHub::Event::Repository.new }
+
+  before do
+    repo.collection.drop
+    create_list(:event, 13, date: DateTime.now - 1).each { |e| repo.publish(e['publish_id']) }
+    create_list(:event, 13, date: DateTime.now + 1).each { |e| repo.publish(e['publish_id']) }
+  end
 
   describe 'GET /v1/events' do
     subject(:events) { JSON.parse(last_response.body)['events'] }
 
-    it 'returns a list of all next events' do
+    it 'returns a list of all next published events' do
       get '/v1/events?category=next'
 
       expect(last_response).to be_ok
 
       expect(past_events).to be_empty
+      expect(future_events.size).to eq(13)
     end
 
-    it 'returns a list of past events' do
+    it 'returns a list of latest past published events' do
       get '/v1/events?category=recent'
 
       expect(last_response).to be_ok
 
+      expect(past_events.size).to eq(10)
       expect(future_events).to be_empty
     end
 
-    it 'returns a list of events for that year and month' do
-      get '/v1/events?year=2016&month=02'
+    it 'returns a list of all published events for that year and month' do
+      repo.publish(create(:event, date: DateTime.parse('2016-06-06T17:00:00Z'))['publish_id'])
+      repo.publish(create(:event, date: DateTime.parse('2016-09-09T17:00:00Z'))['publish_id'])
+      repo.publish(create(:event, date: DateTime.parse('2016-12-12T17:00:00Z'))['publish_id'])
+
+      get '/v1/events?year=2016&month=12'
 
       expect(last_response).to be_ok
 
-      expect(events_for_year_month(2_016, 2)).not_to be_empty
+      expect(events.size).to eq(1)
+      expect(events_for_year_month(2_016, 12).size).to eq(1)
     end
 
     it 'returns not found if year or month are bad formatted' do
@@ -50,7 +64,7 @@ describe VLCTechHub::API::V1::Routes do
   describe 'GET /v1/events/:slug' do
     subject(:event) { JSON.parse(last_response.body)['event'] }
 
-    let(:some_existing_event_slug) { VLCTechHub::Event::Repository.new.all.first['slug'] }
+    let(:some_existing_event_slug) { create(:event)['slug'] }
 
     it 'returns the event for the given slug' do
       get "/v1/events/#{some_existing_event_slug}"
@@ -98,11 +112,7 @@ describe VLCTechHub::API::V1::Routes do
   describe 'GET /v1/events/publish/:uuid' do
     subject(:event) { JSON.parse(last_response.body)['event'] }
 
-    let(:some_unpublished_event) do
-      VLCTechHub::Event::Repository.new.insert(
-        title: 'Title', description: 'Description', link: 'Link', hashtag: 'hashtag', date: DateTime.now
-      )
-    end
+    let(:some_unpublished_event) { create(:event) }
 
     before do
       Mail::TestMailer.deliveries.clear

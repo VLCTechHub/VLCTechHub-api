@@ -8,29 +8,36 @@ describe VLCTechHub::API::V2::Routes do
   end
 
   let(:request_time) { Time.now.utc }
+  let(:repo) { VLCTechHub::Event::Repository.new }
+
+  before do
+    repo.collection.drop
+    create_list(:event, 3, date: DateTime.now - 1).each { |e| repo.publish(e['publish_id']) }
+    create_list(:event, 3, date: DateTime.now + 1).each { |e| repo.publish(e['publish_id']) }
+  end
 
   describe 'GET /v2/events' do
     subject(:events) { JSON.parse(last_response.body) }
 
-    it 'returns the list of all events' do
+    it 'returns the list of all published events' do
       get '/v2/events'
 
       expect(last_response).to be_ok
 
-      expect(past_events).not_to be_empty
-      expect(future_events).not_to be_empty
+      expect(past_events.size).to eq(3)
+      expect(future_events.size).to eq(3)
     end
   end
 
   describe 'GET /v2/events/past' do
     subject(:events) { JSON.parse(last_response.body) }
 
-    it 'returns the list of past events' do
+    it 'returns the list of all past published events' do
       get '/v2/events/past'
 
       expect(last_response).to be_ok
 
-      expect(past_events).not_to be_empty
+      expect(past_events.size).to eq(3)
       expect(future_events).to be_empty
     end
   end
@@ -38,37 +45,49 @@ describe VLCTechHub::API::V2::Routes do
   describe 'GET /v2/events/upcoming' do
     subject(:events) { JSON.parse(last_response.body) }
 
-    it 'returns the list of upcoming events' do
+    it 'returns the list of all upcoming published events' do
       get '/v2/events/upcoming'
 
       expect(last_response).to be_ok
 
       expect(past_events).to be_empty
-      expect(future_events).not_to be_empty
+      expect(future_events.size).to eq(3)
     end
   end
 
   describe 'GET /v2/events/:year' do
     subject(:events) { JSON.parse(last_response.body) }
 
-    it 'returns the list of all events for the given year' do
+    before do
+      create_list(:event, 3, date: DateTime.parse('2016-06-06T17:00:00Z')).each { |e| repo.publish(e['publish_id']) }
+    end
+
+    it 'returns the list of all published events taking place in the given year' do
       get '/v2/events/2016'
 
       expect(last_response).to be_ok
 
-      expect(events_for_year(2_016)).not_to be_empty
+      expect(events.size).to eq(3)
+      expect(events_for_year(2_016).size).to eq(3)
     end
   end
 
   describe 'GET /v2/events/:year/:month' do
     subject(:events) { JSON.parse(last_response.body) }
 
-    it 'returns the list of all events for the given year and month' do
-      get '/v2/events/2016/2'
+    before do
+      repo.publish(create(:event, date: DateTime.parse('2016-06-06T17:00:00Z'))['publish_id'])
+      repo.publish(create(:event, date: DateTime.parse('2016-09-09T17:00:00Z'))['publish_id'])
+      repo.publish(create(:event, date: DateTime.parse('2016-12-12T17:00:00Z'))['publish_id'])
+    end
+
+    it 'returns the list of all published events taking place in the given year and month' do
+      get '/v2/events/2016/12'
 
       expect(last_response).to be_ok
 
-      expect(events_for_year_month(2_016, 2)).not_to be_empty
+      expect(events.size).to eq(1)
+      expect(events_for_year_month(2_016, 12).size).to eq(1)
     end
 
     it 'returns an error if month has an invalid value' do
@@ -87,7 +106,7 @@ describe VLCTechHub::API::V2::Routes do
   describe 'GET /v2/events/:slug' do
     subject(:event) { JSON.parse(last_response.body) }
 
-    let(:some_existing_event_slug) { VLCTechHub::Event::Repository.new.all.first['slug'] }
+    let(:some_existing_event_slug) { create(:event)['slug'] }
 
     it 'returns the event with the given slug' do
       get "/v2/events/#{some_existing_event_slug}"
@@ -108,7 +127,7 @@ describe VLCTechHub::API::V2::Routes do
     subject(:event) { JSON.parse(last_response.body) }
 
     let(:some_event_data) do
-      { title: 'Title', description: 'Description', link: 'Link', hashtag: 'hashtag', date: '20010101T12:00:00Z' }
+      { title: 'Title', description: 'Description', link: 'Link', hashtag: 'hashtag', date: '20160202T12:00:00Z' }
     end
 
     before do
@@ -141,7 +160,7 @@ describe VLCTechHub::API::V2::Routes do
   describe 'GET /v2/events/approve/:uuid' do
     subject(:event) { JSON.parse(last_response.body) }
 
-    let(:some_event_pending_approval) { VLCTechHub::Event::Repository.new.insert(title: 'Title', date: DateTime.now) }
+    let(:some_event_pending_approval) { create(:event) }
 
     it 'approves the event' do
       get "/v2/events/approve/#{some_event_pending_approval['publish_id']}"
@@ -193,11 +212,11 @@ describe VLCTechHub::API::V2::Routes do
   end
 
   def current_year?(event, current_year)
-    (event['date'] >= current_year) || (event['date'] < current_year.next_year)
+    (event['date'] >= current_year) && (event['date'] < current_year.next_year)
   end
 
   def current_month?(event, current_month)
-    (event['date'] >= current_month) || (event['date'] < current_month.next_month)
+    (event['date'] >= current_month) && (event['date'] < current_month.next_month)
   end
 
   def number_of_mail_deliveries

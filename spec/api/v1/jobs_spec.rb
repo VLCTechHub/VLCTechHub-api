@@ -7,15 +7,22 @@ describe VLCTechHub::API::V1::Routes do
     VLCTechHub::API::Boot
   end
 
+  let(:repo) { VLCTechHub::Job::Repository.new }
+
+  before do
+    repo.collection.drop
+    create_list(:job, 3).each { |e| repo.publish(e['publish_id']) }
+  end
+
   describe 'GET /v1/jobs' do
     subject(:jobs) { JSON.parse(last_response.body)['jobs'] }
 
-    it 'returns a list of active job offers' do
+    it 'returns a list of all active job offers' do
       get '/v1/jobs/'
 
       expect(last_response).to be_ok
 
-      expect(jobs).not_to be_empty
+      expect(jobs.size).to eq(3)
     end
   end
 
@@ -65,14 +72,7 @@ describe VLCTechHub::API::V1::Routes do
   describe 'GET /v1/jobs/publish/:uuid' do
     subject(:job) { JSON.parse(last_response.body)['job'] }
 
-    let(:some_unpublished_job_offer) do
-      VLCTechHub::Job::Repository.new.insert(
-        title: 'javascript rockstar',
-        company: { name: 'the name', link: 'a link' },
-        description: 'the description',
-        contact_email: 'some@email.com'
-      )
-    end
+    let(:some_unpublished_job_offer) { create(:job) }
 
     before do
       Mail::TestMailer.deliveries.clear
@@ -110,14 +110,9 @@ describe VLCTechHub::API::V1::Routes do
     subject(:response) { JSON.parse(last_response.body) }
 
     let(:some_published_job_offer) do
-      VLCTechHub::Job::Repository.new.insert(
-        published: true,
-        title: 'javascript rockstar',
-        company: { name: 'the name', link: 'a link' },
-        description: 'the description',
-        contact_email: 'some@email.com',
-        published_at: DateTime.now
-      )
+      job = create(:job)
+      repo.publish(job['publish_id'])
+      job
     end
 
     it 'unpublishes the job offer' do

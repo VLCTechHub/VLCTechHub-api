@@ -13,6 +13,14 @@ module VLCTechHub
         # Implement in child classes
       end
 
+      def find_by_id(id)
+        collection.find(_id: BSON.ObjectId(id)).first
+      end
+
+      def find_by_uuid(uuid)
+        collection.find(publish_id: uuid).first
+      end
+
       def publish(uuid)
         result =
           collection.update_one(

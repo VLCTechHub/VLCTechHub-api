@@ -20,6 +20,10 @@ module VLCTechHub
         collection.find(_id: id).first
       end
 
+      def all
+        collection.find(published: true).sort(created_at: 1)
+      end
+
       private
 
       def with_defaults(organizer)

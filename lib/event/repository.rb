@@ -10,14 +10,6 @@ module VLCTechHub
         db['events']
       end
 
-      def find_by_id(id)
-        collection.find(_id: BSON.ObjectId(id)).first
-      end
-
-      def find_by_uuid(uuid)
-        collection.find(publish_id: uuid).first
-      end
-
       def find_by_slug(slug)
         collection.find(slug: slug).first
       end
@@ -40,7 +32,7 @@ module VLCTechHub
 
       def find_by_year(year)
         year = DateTime.new(year, 1, 1)
-        next_year = (year >> 12)
+        next_year = year.next_year
         collection.find(published: true, date: { '$gte' => year.to_time.utc, '$lt' => next_year.to_time.utc }).sort(
           date: 1
         )
@@ -48,7 +40,7 @@ module VLCTechHub
 
       def find_by_month(year, month)
         month = DateTime.new(year, month, 1)
-        next_month = (month >> 1)
+        next_month = month.next_month
         collection.find(published: true, date: { '$gte' => month.to_time.utc, '$lt' => next_month.to_time.utc }).sort(
           date: 1
         )

@@ -13,38 +13,42 @@ describe VLCTechHub::Base::Repository do
 
   let(:repo) { some_child_repository.new }
 
+  let(:some_record) { create(:job) }
+  let(:some_published_record) do
+    record = some_record
+    repo.publish(some_record['publish_id'])
+    record
+  end
+
+  before { repo.remove_all }
+
   describe '#publish' do
-    it 'flags as published the record' do
-      job = { published: false, publish_id: 123 }
-      id = repo.db['jobs'].insert_one(job).inserted_id
+    it 'flags the record as published' do
+      repo.publish(some_record['publish_id'])
 
-      repo.publish(123)
+      updated_record = repo.find_by_id(some_record['_id'])
 
-      updated = repo.db['jobs'].find(_id: id).first
-      expect(updated['published']).to be(true)
-      expect(updated['published_at']).not_to be_nil
+      expect(updated_record['published']).to be(true)
+      expect(updated_record['published_at']).not_to be_nil
     end
   end
 
   describe '#unpublish' do
-    it 'fail to unpublish when secret is wrong' do
-      job = { published: true, publish_id: 456, secret: 'the_secret' }
-      id = repo.db['jobs'].insert_one(job).inserted_id
+    it 'fails to unpublish when secret is wrong' do
+      repo.unpublish(some_published_record['publish_id'], 'wrong_secret')
 
-      repo.unpublish(456, 'wrong_secret')
+      record = repo.find_by_id(some_published_record['_id'])
 
-      updated = repo.db['jobs'].find(_id: id).first
-      expect(updated['published']).to be(true)
+      expect(record['published']).to be(true)
     end
 
     it 'flags the record as not published' do
-      job = { published: true, publish_id: 678, secret: 'the_secret', published_at: DateTime.now }
-      id = repo.db['jobs'].insert_one(job).inserted_id
+      repo.unpublish(some_published_record['publish_id'], some_published_record['secret'])
 
-      repo.unpublish(678, 'the_secret')
+      record = repo.find_by_id(some_published_record['_id'])
 
-      updated = repo.db['jobs'].find(_id: id).first
-      expect(updated['published_at']).to be_nil
+      expect(record['published']).to be(false)
+      expect(record['published_at']).to be_nil
     end
   end
 end

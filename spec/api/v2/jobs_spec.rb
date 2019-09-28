@@ -7,6 +7,13 @@ describe VLCTechHub::API::V2::Routes do
     VLCTechHub::API::Boot
   end
 
+  let(:repo) { VLCTechHub::Job::Repository.new }
+
+  before do
+    repo.collection.drop
+    create_list(:job, 3).each { |e| repo.publish(e['publish_id']) }
+  end
+
   describe 'GET /v2/jobs' do
     subject(:jobs) { JSON.parse(last_response.body) }
 
@@ -15,7 +22,7 @@ describe VLCTechHub::API::V2::Routes do
 
       expect(last_response).to be_ok
 
-      expect(jobs).not_to be_empty
+      expect(jobs.size).to eq(3)
     end
   end
 
@@ -65,7 +72,7 @@ describe VLCTechHub::API::V2::Routes do
   describe 'GET /v2/jobs/approve/:uuid' do
     subject(:job) { JSON.parse(last_response.body) }
 
-    let(:some_job_offer_pending_approval) { VLCTechHub::Job::Repository.new.insert(text: 'javascript rockstar') }
+    let(:some_job_offer_pending_approval) { create(:job) }
 
     it 'approves the job offer' do
       get "/v2/jobs/approve/#{some_job_offer_pending_approval['publish_id']}"
@@ -92,7 +99,9 @@ describe VLCTechHub::API::V2::Routes do
     subject(:response) { JSON.parse(last_response.body) }
 
     let(:some_published_job_offer) do
-      VLCTechHub::Job::Repository.new.insert(published: true, text: 'javascript rockstar', published_at: DateTime.now)
+      job = create(:job)
+      repo.publish(job['publish_id'])
+      job
     end
 
     it 'unpublishes the job offer' do
