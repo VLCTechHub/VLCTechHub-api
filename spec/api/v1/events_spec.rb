@@ -64,14 +64,25 @@ describe VLCTechHub::API::V1::Routes do
   describe 'GET /v1/events/:slug' do
     subject(:event) { JSON.parse(last_response.body)['event'] }
 
-    let(:some_existing_event_slug) { create(:event)['slug'] }
+    let(:some_unpublished_event_slug) { create(:event)['slug'] }
+    let(:some_published_event_slug) do
+      event = create(:event)
+      repo.publish(event['publish_id'])
+      event['slug']
+    end
 
-    it 'returns the event for the given slug' do
-      get "/v1/events/#{some_existing_event_slug}"
+    it 'returns the published event for the given slug' do
+      get "/v1/events/#{some_published_event_slug}"
 
       expect(last_response).to be_ok
 
-      expect(event['slug']).to eq(some_existing_event_slug)
+      expect(event['slug']).to eq(some_published_event_slug)
+    end
+
+    it 'returns a not found error if the event is unpublished' do
+      get "/v1/events/#{some_unpublished_event_slug}"
+
+      expect(last_response).to be_not_found
     end
   end
 

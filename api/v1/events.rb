@@ -47,6 +47,7 @@ module VLCTechHub
           end
           get '/:slug' do
             result = events.find_by_slug(params[:slug])
+            error!('404 Not found', 404) unless result
             present :event, result, with: Event
           end
 

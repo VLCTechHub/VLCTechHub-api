@@ -59,6 +59,9 @@ module VLCTechHub
           params { requires :slug, type: String, regexp: /^\w[\w-]*-[0-9a-f]{12}$/, desc: 'Slug' }
           get ':slug' do
             result = events.find_by_slug(params[:slug])
+
+            error!('404 Not found', 404) unless result
+
             present result, with: Event
           end
 

@@ -11,7 +11,7 @@ module VLCTechHub
       end
 
       def find_by_slug(slug)
-        collection.find(slug: slug).first
+        collection.find(published: true, slug: slug).first
       end
 
       def find_past_events
