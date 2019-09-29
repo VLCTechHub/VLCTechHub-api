@@ -14,6 +14,27 @@ describe VLCTechHub::API::V2::Routes do
     create_list(:job, 3).each { |e| repo.publish(e['publish_id']) }
   end
 
+  describe 'PATCH /v2/jobs/posted' do
+    let(:some_approved_jobs) do
+      jobs = create_list(:job, 3)
+      jobs.each { |job| repo.publish(job['publish_id']) }
+      jobs
+    end
+    let(:some_posted_job_ids) { some_approved_jobs.map { |job| { id: job['publish_id'] } } }
+
+    it 'flags the job offers as posted in the website' do
+      patch '/v2/jobs/posted', jobs: some_posted_job_ids
+
+      expect(last_response).to be_no_content
+
+      some_approved_jobs.each do |approved_job|
+        uuid = approved_job['publish_id']
+        job = repo.find_by_uuid(uuid)
+        expect(job['posted']).to be(true)
+      end
+    end
+  end
+
   describe 'GET /v2/jobs' do
     subject(:jobs) { JSON.parse(last_response.body) }
 

@@ -22,6 +22,7 @@ describe VLCTechHub::Event::Repository do
       expect(result['publish_id']).not_to be_nil
       expect(result['created_at']).not_to be_nil
       expect(result['slug']).not_to be_nil
+      expect(result['posted']).to be(false)
     end
   end
 

@@ -17,6 +17,21 @@ module VLCTechHub
             end
           end
 
+          desc 'Flag job offers as posted in the website'
+          params do
+            requires :jobs, type: Array[JSON] do
+              requires :id,
+                       type: String,
+                       regexp: /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i,
+                       desc: 'The publish id for the job offer'
+            end
+          end
+          patch 'posted' do
+            params[:jobs].each { |job| jobs.mark_as_posted(job['id']) }
+
+            status :no_content
+          end
+
           desc 'Retrieve job offers published in the last month'
           get do
             result = jobs.find_latest_jobs

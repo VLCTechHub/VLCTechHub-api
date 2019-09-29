@@ -33,6 +33,17 @@ describe VLCTechHub::Base::Repository do
     end
   end
 
+  describe '#mark_as_posted' do
+    it 'flags the record as posted in the website' do
+      repo.mark_as_posted(some_published_record['publish_id'])
+
+      updated_record = repo.find_by_id(some_published_record['_id'])
+
+      expect(updated_record['posted']).to be(true)
+      expect(updated_record['posted_at']).not_to be_nil
+    end
+  end
+
   describe '#unpublish' do
     it 'fails to unpublish when secret is wrong' do
       repo.unpublish(some_published_record['publish_id'], 'wrong_secret')

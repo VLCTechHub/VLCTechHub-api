@@ -20,6 +20,21 @@ module VLCTechHub
             end
           end
 
+          desc 'Flag events as posted in the website'
+          params do
+            requires :events, type: Array[JSON] do
+              requires :id,
+                       type: String,
+                       regexp: /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i,
+                       desc: 'The publish id for the event'
+            end
+          end
+          patch 'posted' do
+            params[:events].each { |event| events.mark_as_posted(event['id']) }
+
+            status :no_content
+          end
+
           desc 'Retrieve all events'
           get do
             result = events.all

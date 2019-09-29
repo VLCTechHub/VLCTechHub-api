@@ -22,6 +22,7 @@ describe VLCTechHub::Job::Repository do
       expect(result['publish_id']).not_to be_nil
       expect(result['created_at']).not_to be_nil
       expect(result['secret']).not_to be_nil
+      expect(result['posted']).to be(false)
     end
 
     it 'adds protocol to link when missing' do

@@ -16,6 +16,27 @@ describe VLCTechHub::API::V2::Routes do
     create_list(:event, 3, date: DateTime.now + 1).each { |e| repo.publish(e['publish_id']) }
   end
 
+  describe 'PATCH /v2/events/posted' do
+    let(:some_approved_events) do
+      events = create_list(:event, 3)
+      events.each { |e| repo.publish(e['publish_id']) }
+      events
+    end
+    let(:some_posted_event_ids) { some_approved_events.map { |event| { id: event['publish_id'] } } }
+
+    it 'flags the events as posted in the website' do
+      patch '/v2/events/posted', events: some_posted_event_ids
+
+      expect(last_response).to be_no_content
+
+      some_approved_events.each do |approved_event|
+        uuid = approved_event['publish_id']
+        event = repo.find_by_uuid(uuid)
+        expect(event['posted']).to be(true)
+      end
+    end
+  end
+
   describe 'GET /v2/events' do
     subject(:events) { JSON.parse(last_response.body) }
 

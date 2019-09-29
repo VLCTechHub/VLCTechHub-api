@@ -74,6 +74,7 @@ module VLCTechHub
           e['publish_id'] = SecureRandom.uuid
           e['created_at'] = id.generation_time
           e['slug'] = slug_for(e['title'], id)
+          e['posted'] = false
         end
       end
     end

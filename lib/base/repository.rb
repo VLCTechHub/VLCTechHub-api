@@ -33,6 +33,18 @@ module VLCTechHub
         was_updated
       end
 
+      def mark_as_posted(uuid)
+        result =
+          collection.update_one(
+            { posted: false, publish_id: uuid },
+            '$set' => { posted: true, posted_at: DateTime.now }
+          )
+
+        was_updated = (result.n == 1)
+
+        was_updated
+      end
+
       def publish_all
         collection.update_many({ published: false }, '$set' => { published: true, published_at: DateTime.now })
         true
