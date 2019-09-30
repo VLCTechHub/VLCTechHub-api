@@ -15,6 +15,8 @@ module VLCTechHub
           "Nueva #ofertaDeEmpleo: #{job['title']} por #{company} " \
             "#{jobs_endpoint}/#{job['publish_id']}"
         )
+
+        VLCTechHub::Job::Repository.new.mark_as_tweeted(job['publish_id'])
       end
 
       private

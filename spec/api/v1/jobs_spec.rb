@@ -89,16 +89,6 @@ describe VLCTechHub::API::V1::Routes do
       expect(job['published_at']).not_to be_nil
     end
 
-    it 'tweets and emails the publication' do
-      expect { get "/v1/jobs/publish/#{some_unpublished_job_offer['publish_id']}" }.to change {
-        number_of_mail_deliveries
-      }.by(2)
-
-      expect(VLCTechHub::Job::Twitter).to have_received(:new_job).with(
-        hash_including(publish_id: some_unpublished_job_offer['publish_id'])
-      )
-    end
-
     it 'returns a not found error if publish id does not exist' do
       get '/v1/jobs/publish/invalid_publish_id'
 

@@ -9,6 +9,15 @@ module VLCTechHub
         collection.find(published: true, published_at: { '$gte' => previous_month.to_time.utc }).sort(date: 1)
       end
 
+      def find_twitter_pending_jobs
+        month = DateTime.now
+        previous_month = month.prev_month
+        collection.find(
+          published: true, posted: true, tweeted: false, published_at: { '$gte' => previous_month.to_time.utc }
+        )
+          .sort(date: 1)
+      end
+
       def insert(job)
         job = correct(job)
         id = collection.insert_one(with_defaults(job)).inserted_id
@@ -41,6 +50,7 @@ module VLCTechHub
           j['created_at'] = DateTime.now
           j['secret'] = SecureRandom.uuid
           j['posted'] = false
+          j['tweeted'] = false
         end
       end
     end

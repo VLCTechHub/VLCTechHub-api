@@ -14,6 +14,7 @@ require_relative 'lib/event/repository'
 require_relative 'lib/event/twitter'
 
 require_relative 'lib/job/repository'
+require_relative 'lib/job/twitter'
 
 require_relative 'lib/organizer/creator'
 require_relative 'lib/organizer/repository'
@@ -35,9 +36,6 @@ task down: :'server:down'
 
 desc 'Connect to database console'
 task mongo: :'mongo:connect'
-
-desc 'Tweet events scheduled today'
-task tweet: :'twitter:tweet'
 
 desc 'Run spec tests'
 task test: :'test:run'
@@ -129,12 +127,28 @@ namespace :mongo do
 end
 
 namespace :twitter do
+  desc 'Tweet published events'
+  task :tweet_event do
+    repo = VLCTechHub::Event::Repository.new
+    twitter = VLCTechHub::Event::Twitter.new
+    event = repo.find_twitter_pending_events.first
+    twitter.new_event(event) if event
+  end
+
   desc 'Tweet events scheduled today'
-  task :tweet do
+  task :tweet_today_events do
     repo = VLCTechHub::Event::Repository.new
     twitter = VLCTechHub::Event::Twitter.new
     today_events = repo.find_today_events
     twitter.today(today_events)
+  end
+
+  desc 'Tweet published jobs'
+  task :tweet_job do
+    repo = VLCTechHub::Job::Repository.new
+    twitter = VLCTechHub::Job::Twitter.new
+    job = repo.find_twitter_pending_jobs.first
+    twitter.new_job(job) if job
   end
 end
 

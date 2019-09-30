@@ -77,11 +77,10 @@ module VLCTechHub
             desc 'Activate publication from a link in a mail and broadcast it'
             get '/:uuid' do
               was_updated = events.publish params[:uuid]
+
               error!('404 Not found', 404) unless was_updated
 
               event = events.find_by_uuid params[:uuid]
-              VLCTechHub::Event::Mailer.broadcast event
-              VLCTechHub::Event::Twitter.new_event event
               present :event, event, with: Event
             end
           end

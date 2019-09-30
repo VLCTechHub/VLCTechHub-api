@@ -26,6 +26,10 @@ module VLCTechHub
         collection.find(published: true, date: { '$gte' => Time.now.utc, '$lte' => 1.day.from_now.utc.midnight })
       end
 
+      def find_twitter_pending_events
+        collection.find(published: true, posted: true, tweeted: false, date: { '$gte' => Time.now.utc }).sort(date: 1)
+      end
+
       def find_by_year(year)
         year = DateTime.new(year, 1, 1)
         next_year = year.next_year
@@ -75,6 +79,7 @@ module VLCTechHub
           e['created_at'] = id.generation_time
           e['slug'] = slug_for(e['title'], id)
           e['posted'] = false
+          e['tweeted'] = false
         end
       end
     end

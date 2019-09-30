@@ -140,16 +140,6 @@ describe VLCTechHub::API::V1::Routes do
       expect(event['id']).to eq(some_unpublished_event['publish_id'])
     end
 
-    it 'tweets and emails the publication' do
-      expect { get "/v1/events/publish/#{some_unpublished_event['publish_id']}" }.to change {
-        number_of_mail_deliveries
-      }.by(1)
-
-      expect(VLCTechHub::Event::Twitter).to have_received(:new_event).with(
-        hash_including(publish_id: some_unpublished_event['publish_id'])
-      )
-    end
-
     it 'returns a not found error if publish id does not exist' do
       get '/v1/events/publish/invalid_publish_id'
 

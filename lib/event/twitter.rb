@@ -17,6 +17,8 @@ module VLCTechHub
           "Nuevo Evento: #{hashtag(event)} #{event['title']} #{datetime(event)} " \
             "#{events_endpoint}/#{event['slug']}"
         )
+
+        VLCTechHub::Event::Repository.new.mark_as_tweeted(event['publish_id'])
       end
 
       def today(events)

@@ -19,6 +19,11 @@ describe VLCTechHub::Base::Repository do
     repo.publish(some_record['publish_id'])
     record
   end
+  let(:some_posted_record) do
+    record = some_published_record
+    repo.mark_as_posted(some_published_record['publish_id'])
+    record
+  end
 
   before { repo.remove_all }
 
@@ -41,6 +46,17 @@ describe VLCTechHub::Base::Repository do
 
       expect(updated_record['posted']).to be(true)
       expect(updated_record['posted_at']).not_to be_nil
+    end
+  end
+
+  describe '#mark_as_tweeted' do
+    it 'flags the record as posted in twitter' do
+      repo.mark_as_tweeted(some_posted_record['publish_id'])
+
+      updated_record = repo.find_by_id(some_posted_record['_id'])
+
+      expect(updated_record['tweeted']).to be(true)
+      expect(updated_record['tweeted_at']).not_to be_nil
     end
   end
 
