@@ -3,10 +3,6 @@
 module VLCTechHub
   module Job
     class Repository < VLCTechHub::Base::Repository
-      def collection
-        db['jobs']
-      end
-
       def find_latest_jobs
         month = DateTime.now
         previous_month = month.prev_month
@@ -24,6 +20,10 @@ module VLCTechHub
       end
 
       private
+
+      def collection
+        db['jobs']
+      end
 
       def correct(job)
         return job if job[:link].nil?

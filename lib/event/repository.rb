@@ -6,10 +6,6 @@ require 'active_support/core_ext'
 module VLCTechHub
   module Event
     class Repository < VLCTechHub::Base::Repository
-      def collection
-        db['events']
-      end
-
       def find_by_slug(slug)
         collection.find(published: true, slug: slug).first
       end
@@ -56,6 +52,10 @@ module VLCTechHub
       end
 
       private
+
+      def collection
+        db['events']
+      end
 
       def slug_for(title, id)
         id = id.to_s.chars

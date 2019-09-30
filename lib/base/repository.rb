@@ -5,14 +5,6 @@ require 'mongo'
 module VLCTechHub
   module Base
     class Repository
-      def db
-        VLCTechHub.db_client
-      end
-
-      def collection
-        # Implement in child classes
-      end
-
       def find_by_id(id)
         collection.find(_id: BSON.ObjectId(id)).first
       end
@@ -66,6 +58,16 @@ module VLCTechHub
         collection.drop
 
         true
+      end
+
+      private
+
+      def db
+        VLCTechHub.db_client
+      end
+
+      def collection
+        # Implement in child classes
       end
     end
   end

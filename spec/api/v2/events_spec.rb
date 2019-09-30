@@ -11,7 +11,7 @@ describe VLCTechHub::API::V2::Routes do
   let(:repo) { VLCTechHub::Event::Repository.new }
 
   before do
-    repo.collection.drop
+    repo.remove_all
     create_list(:event, 3, date: DateTime.now - 1).each { |e| repo.publish(e['publish_id']) }
     create_list(:event, 3, date: DateTime.now + 1).each { |e| repo.publish(e['publish_id']) }
   end

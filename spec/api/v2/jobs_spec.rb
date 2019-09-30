@@ -10,7 +10,7 @@ describe VLCTechHub::API::V2::Routes do
   let(:repo) { VLCTechHub::Job::Repository.new }
 
   before do
-    repo.collection.drop
+    repo.remove_all
     create_list(:job, 3).each { |e| repo.publish(e['publish_id']) }
   end
 

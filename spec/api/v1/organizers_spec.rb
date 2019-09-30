@@ -10,7 +10,7 @@ describe VLCTechHub::API::V1::Routes do
   let(:repo) { VLCTechHub::Organizer::Repository.new }
 
   before do
-    repo.collection.drop
+    repo.remove_all
     create_list(:organizer, 2)
   end
 
