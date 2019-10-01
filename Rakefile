@@ -2,8 +2,6 @@
 
 require 'bundler/setup'
 
-require 'rspec/core/rake_task'
-
 require_relative 'config/environment'
 
 require_relative 'lib/twitter/rest_client'
@@ -181,8 +179,11 @@ namespace :test do
 
   desc 'Run spec tests'
   task :run, [:file] do |_t, _args|
+    require 'rspec/core/rake_task'
     VLCTechHub.environment = :test
     RSpec::Core::RakeTask.new(:spec) { |t| t.rspec_opts = '--color --format progress' }
     Rake::Task['spec'].execute
+  rescue LoadError
+    puts 'RSpec not present. Aborting!'
   end
 end
