@@ -53,6 +53,12 @@ module VLCTechHub
             present result.to_a, with: Event
           end
 
+          desc 'Retrieve today events'
+          get 'today' do
+            result = events.find_today_events
+            present result.to_a, with: Event
+          end
+
           desc 'Retrieve events by year'
           params { requires :year, type: Integer, desc: 'Year' }
           get ':year', requirements: { year: /[0-9]*/ } do

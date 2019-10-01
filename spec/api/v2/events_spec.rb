@@ -12,8 +12,8 @@ describe VLCTechHub::API::V2::Routes do
 
   before do
     repo.remove_all
-    create_list(:event, 3, date: DateTime.now - 1).each { |e| repo.publish(e['publish_id']) }
-    create_list(:event, 3, date: DateTime.now + 1).each { |e| repo.publish(e['publish_id']) }
+    create_list(:event, 7, date: DateTime.now - 1).each { |e| repo.publish(e['publish_id']) }
+    create_list(:event, 5, date: DateTime.now + 1).each { |e| repo.publish(e['publish_id']) }
   end
 
   describe 'PATCH /v2/events/posted' do
@@ -45,8 +45,8 @@ describe VLCTechHub::API::V2::Routes do
 
       expect(last_response).to be_ok
 
-      expect(past_events.size).to eq(3)
-      expect(future_events.size).to eq(3)
+      expect(past_events.size).to eq(7)
+      expect(future_events.size).to eq(5)
     end
   end
 
@@ -58,7 +58,7 @@ describe VLCTechHub::API::V2::Routes do
 
       expect(last_response).to be_ok
 
-      expect(past_events.size).to eq(3)
+      expect(past_events.size).to eq(7)
       expect(future_events).to be_empty
     end
   end
@@ -72,7 +72,24 @@ describe VLCTechHub::API::V2::Routes do
       expect(last_response).to be_ok
 
       expect(past_events).to be_empty
-      expect(future_events.size).to eq(3)
+      expect(future_events.size).to eq(5)
+    end
+  end
+
+  describe 'GET /v2/events/today' do
+    subject(:events) { JSON.parse(last_response.body) }
+
+    before do
+      create_list(:event, 3, date: DateTime.parse('2019-10-01T17:00:00Z')).each { |e| repo.publish(e['publish_id']) }
+      allow(DateTime).to receive(:now).and_return(DateTime.parse('2019-10-01T12:00:00Z'))
+    end
+
+    it 'returns the list of all published events taking place today' do
+      get '/v2/events/today'
+
+      expect(last_response).to be_ok
+
+      expect(events.size).to eq(3)
     end
   end
 
