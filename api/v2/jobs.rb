@@ -28,8 +28,7 @@ module VLCTechHub
           end
           patch 'posted' do
             params[:jobs].each { |job| jobs.mark_as_posted(job['id']) }
-
-            status :no_content
+            body false
           end
 
           desc 'Retrieve job offers published in the last month'

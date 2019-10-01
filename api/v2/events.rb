@@ -31,8 +31,7 @@ module VLCTechHub
           end
           patch 'posted' do
             params[:events].each { |event| events.mark_as_posted(event['id']) }
-
-            status :no_content
+            body false
           end
 
           desc 'Retrieve all events'
