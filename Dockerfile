@@ -1,4 +1,4 @@
-FROM ruby:2.6.4
+FROM ruby:2.6.5
 
 RUN set set -ex \
   && curl -sL https://deb.nodesource.com/setup_10.x | bash - \
