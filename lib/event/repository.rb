@@ -23,7 +23,7 @@ module VLCTechHub
       end
 
       def find_today_events
-        collection.find(published: true, date: { '$gte' => Time.now.utc, '$lte' => 1.day.from_now.utc.midnight })
+        collection.find(published: true, date: { '$gte' => Time.now.utc, '$lt' => 1.day.from_now.utc.midnight })
       end
 
       def find_twitter_pending_events

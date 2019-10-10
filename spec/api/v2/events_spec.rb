@@ -81,7 +81,7 @@ describe VLCTechHub::API::V2::Routes do
 
     before do
       create_list(:event, 3, date: DateTime.parse('2019-10-01T17:00:00Z')).each { |e| repo.publish(e['publish_id']) }
-      allow(DateTime).to receive(:now).and_return(DateTime.parse('2019-10-01T12:00:00Z'))
+      allow(Time).to receive(:now).and_return(DateTime.parse('2019-10-01T12:00:00Z').to_time)
     end
 
     it 'returns the list of all published events taking place today' do
