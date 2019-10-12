@@ -33,6 +33,11 @@ describe VLCTechHub::Job::Repository do
       result = repo.insert(link: 'http://www.vlcjob.es')
       expect(result['link']).to eql('http://www.vlcjob.es')
     end
+
+    it 'does not add protocol to link when empty' do
+      result = repo.insert(link: '')
+      expect(result['link']).to eql('')
+    end
   end
 
   describe '#find_twitter_pending_jobs' do

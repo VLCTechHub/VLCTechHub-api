@@ -35,7 +35,7 @@ module VLCTechHub
       end
 
       def correct(job)
-        return job if job[:link].blank?
+        return job if job[:link].nil? || job[:link].empty?
 
         link_misses_protocol = !job[:link].match(%r{^https?://})
         job[:link] = "http://#{job[:link]}" if link_misses_protocol
