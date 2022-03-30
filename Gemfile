@@ -26,5 +26,5 @@ end
 
 group :production do
   gem 'newrelic_rpm', '~> 6.7.0.359'
-  gem 'puma', '~> 4.2.1'
+  gem 'puma', '~> 4.3.12'
 end
