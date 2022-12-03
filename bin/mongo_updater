@@ -1,0 +1,60 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+
+require 'dotenv'
+require 'uri'
+require 'mongo'
+
+Dotenv.load
+
+abort "Not to be run in production!!" if ENV['RACK_ENV'] == 'production'
+
+def format_uri(uri)
+  index = (uri =~ /@/)
+  index = (uri =~ /\/{2}/) + 1 unless index
+  uri[index+1..-1]
+end
+
+# do update
+source_uri = ENV['MASTER_MONGODB_URI']
+target_uri = ENV['MONGODB_URI']
+
+puts "Updating from master database..."
+puts
+puts "source database: #{format_uri(source_uri)}"
+puts "target database: #{format_uri(target_uri)}"
+puts
+print "Press 'Y' to continue, anything else to abort (y/N) "
+
+abort "Aborting!" if gets.downcase != "y\n"
+
+print "Processing... "
+
+# connect to source and target instances
+Mongo::Logger.logger.level = ::Logger::ERROR
+
+source = Mongo::Client.new(source_uri)
+target = Mongo::Client.new(target_uri)
+
+# collections to update
+collections = ['events', 'jobs']
+
+# process the update
+collections.each do |coll|
+  # drop existing collections in target
+  target[coll].drop
+  # copy source into target, transforming data if necessary
+  source[coll].find.each do |doc|
+    target[coll].insert_one(doc)
+  end
+  # ensure indexes
+  target[coll].indexes.create_many([
+    { :key => { date: 1 }},
+    { :key => { date: -1 }},
+    { :key => { slug: 1 }, :unique => true },
+    { :key => { publish_id: 1 }, :unique => true }
+  ])
+end
+
+puts "Done!"

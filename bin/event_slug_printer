@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+
+require 'dotenv'
+require 'uri'
+require 'mongo'
+
+Dotenv.load
+
+def format_uri(uri)
+  index = (uri =~ /@/)
+  index = (uri =~ /\/{2}/) + 1 unless index
+  uri[index+1..-1]
+end
+
+db_uri = ENV['MONGODB_URI']
+
+puts "Listing database at #{format_uri(db_uri)}"
+
+Mongo::Logger.logger.level = ::Logger::ERROR
+db = Mongo::Client.new(db_uri)
+
+db['events'].find.each do |event|
+  created_at = event['created_at']
+  slug = event['slug']
+  puts "id: #{event['_id']} created_at: #{created_at} slug: #{slug}"
+end
