@@ -12,6 +12,7 @@ gem 'mongo', '~> 2.10.2'
 gem 'rack', '~> 2.0.7'
 gem 'rack-cors', '~> 1.0.3'
 gem 'rake', '~> 13.0.0'
+gem 'ruby-clock', '~> 1.0.0'
 gem 'twitter', '~> 6.2.0'
 
 group :development, :test do

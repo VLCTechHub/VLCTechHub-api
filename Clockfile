@@ -1,0 +1,19 @@
+# frozen_string_literal: true
+
+ENV['NEWRELIC_ENABLE'] = 'false'
+
+require 'rake'
+
+load 'Rakefile'
+
+schedule.cron '*/15 7-22 * * *' do
+  rake_execute 'twitter:tweet_job'
+end
+
+schedule.cron '*/15 7-22 * * *' do
+  rake_execute 'twitter:tweet_event'
+end
+
+schedule.cron '0 7 * * *' do
+  rake_execute 'twitter:tweet_today_events'
+end

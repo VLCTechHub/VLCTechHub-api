@@ -19,7 +19,7 @@ RUN bundle install
 COPY . $app/
 
 ENV RACK_ENV=production
-ENV PORT=80
+ENV PORT=8080
 
 EXPOSE $PORT
 

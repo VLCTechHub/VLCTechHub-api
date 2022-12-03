@@ -130,7 +130,12 @@ namespace :twitter do
     repo = VLCTechHub::Event::Repository.new
     twitter = VLCTechHub::Event::Twitter.new
     event = repo.find_twitter_pending_events.first
-    twitter.new_event(event) if event
+    if event
+      puts "Tweet new event: '#{event['title']}' scheduled at #{event['date']}"
+      twitter.new_event(event)
+    else
+      puts 'Tweet new event: no new published events'
+    end
   end
 
   desc 'Tweet events scheduled today'
@@ -138,7 +143,12 @@ namespace :twitter do
     repo = VLCTechHub::Event::Repository.new
     twitter = VLCTechHub::Event::Twitter.new
     today_events = repo.find_today_events
-    twitter.today(today_events)
+    if today_events.count_documents > 0
+      puts "Tweet today events: #{today_events.count_documents} events scheduled today"
+      twitter.today(today_events)
+    else
+      puts 'Tweet today events: no events scheduled today'
+    end
   end
 
   desc 'Tweet published jobs'
@@ -146,7 +156,12 @@ namespace :twitter do
     repo = VLCTechHub::Job::Repository.new
     twitter = VLCTechHub::Job::Twitter.new
     job = repo.find_twitter_pending_jobs.first
-    twitter.new_job(job) if job
+    if job
+      puts "Tweet new job: '#{job['title']}' at #{job['company']['name']}"
+      twitter.new_job(job)
+    else
+      puts 'Tweet new job: no new published jobs'
+    end
   end
 end
 
