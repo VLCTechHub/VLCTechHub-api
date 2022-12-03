@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.8"
 
 services:
   api:
@@ -40,7 +40,7 @@ services:
       ["bash", "-c", "(bundle check || bundle install) && bundle exec rake up"]
 
   mongo:
-    image: mongo:3.6.12
+    image: mongo:5.0.14
     volumes:
       - type: volume
         source: data

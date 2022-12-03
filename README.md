@@ -7,7 +7,7 @@ Public API for VLCTechHub
 ## How to use it
 
 - Clone the project `git clone git@github.com:VLCTechHub/VLCTechHub-api.git`
-- Install Ruby 2.6.4 (you might want to install it with [rbenv](https://github.com/rbenv/rbenv))
+- Install Ruby 3.1.3 (you might want to install it with [rbenv](https://github.com/rbenv/rbenv))
 - Install MongoDB (optional, you can use a remote service)
 - Install dependencies by running `bundle install`
 - Create a local `.env` file from the included `.env.example` file
