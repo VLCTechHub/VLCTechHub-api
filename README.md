@@ -25,10 +25,10 @@ Public API for VLCTechHub
 
 ### How to run the linters
 
-The project is configured to use Rubocop checks and Prettier for Ruby autoformatter.
+The project is configured to use [Rubocop](https://rubocop.org) and [SyntaxTree](https://github.com/ruby-syntax-tree/syntax_tree) checks.
 
-- For Rubocop linting run `bundle exec rubocop`
-- For Prettier for Ruby format check run `bundle exec rbprettier -c '**/*.rb'`
+- For Rubocop linting run `bundle exec rubocop .`
+- For SyntaxTree format checks run `bundle exec stree check '**/*.rb' '**/*.ru' Rakefile Gemfile Clockfile`
 
 To simplify the linting checks it is advisable to configure both linters extensions in your code editor of choice.
 
@@ -50,7 +50,7 @@ To simplify the linting checks it is advisable to configure both linters extensi
 
 ### How to run the linters
 
-The project is configured to use Rubocop checks and Prettier for Ruby autoformatter.
+The project is configured to use [Rubocop](https://rubocop.org) and [SyntaxTree](https://github.com/ruby-syntax-tree/syntax_tree) checks.
 
-- For Rubocop, with the containers running, execute `docker-compose exec api bundle exec rubocop`
-- For Prettier for Ruby, with the containers running, execute `docker-compose exec api bundle exec rbprettier -c '**/*.rb'`
+- For Rubocop, with the containers running, execute `docker-compose exec api bundle exec rubocop .`
+- For SyntaxTree, with the containers running, execute `docker-compose exec api bundle exec stree check '**/*.rb' '**/*.ru' Rakefile Gemfile Clockfile`
