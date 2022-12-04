@@ -2,23 +2,37 @@ require:
   - rubocop-rspec
 
 AllCops:
+  NewCops: enable
   Exclude:
     - "bin/**/*"
     - "tmp/**/*"
     - "vendor/**/*"
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 3.1
 
-Layout/IndentFirstArgument:
+Layout/FirstArgumentIndentation:
   Enabled: false
+
+Layout/LineEndStringConcatenationIndentation:
+  EnforcedStyle: indented
+
+Layout/LineLength:
+  Max: 120
 
 Layout/MultilineMethodCallIndentation:
   Enabled: false
 
 Layout/MultilineOperationIndentation:
-  Enabled: false
+  EnforcedStyle: indented
+  # It doesn't seem to work well in our case, so we exclude a couple of false offenses
+  Exclude:
+    - "lib/organizer/creator.rb"
+    - "lib/twitter/rest_client.rb"
 
 Layout/SpaceInsideStringInterpolation:
   Enabled: false
+
+Metrics/AbcSize:
+  Max: 18
 
 Metrics/BlockLength:
   Exclude:
@@ -26,9 +40,6 @@ Metrics/BlockLength:
     - "**/api/v2/*.rb"
     - "**/spec/**/*.rb"
     - "**/Rakefile"
-
-Metrics/LineLength:
-  Max: 120
 
 Metrics/MethodLength:
   Max: 20
@@ -47,4 +58,20 @@ RSpec/MultipleExpectations:
   Enabled: false
 
 Style/Documentation:
+  Enabled: false
+
+Style/FetchEnvVar:
+  Enabled: false
+
+Style/HashSyntax:
+  EnforcedStyle: no_mixed_keys
+  EnforcedShorthandSyntax: consistent
+
+Style/NumericPredicate:
+  Enabled: false
+
+Style/RedundantAssignment:
+  Enabled: false
+
+Style/StringConcatenation:
   Enabled: false
