@@ -37,7 +37,7 @@ services:
     depends_on:
       - mongo
     command:
-      ["bash", "-c", "(bundle check || bundle install) && bundle exec rake up"]
+      ["bash", "-c", "(bundle check || bundle install) && rake up"]
 
   mongo:
     image: mongo:5.0.14
