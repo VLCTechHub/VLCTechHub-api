@@ -19,7 +19,7 @@ jobs:
       - name: Run Rubocop checks
         run: rubocop .
 
-  Prettier:
+  SyntaxTree:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
