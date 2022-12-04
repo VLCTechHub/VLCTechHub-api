@@ -6,6 +6,8 @@ require 'rake'
 
 load 'Rakefile'
 
+$stdout.sync = true
+
 schedule.cron '*/15 7-22 * * *' do
   rake_execute 'twitter:tweet_job'
 end
