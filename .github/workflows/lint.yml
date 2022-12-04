@@ -26,11 +26,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.1.3
-      - name: Setup up Node 18.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - name: Set up Prettier for Ruby
-        run: gem install prettier
-      - name: Run Prettier for Ruby checks
-        run: rbprettier -c '**/*.rb'
+      - name: Set up SyntaxTree
+        run: gem install syntax_tree
+      - name: Run SyntaxTree checks
+        run: stree check '**/*.rb' '**/*.ru' Rakefile Gemfile Clockfile

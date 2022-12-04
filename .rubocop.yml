@@ -13,7 +13,7 @@ Layout/FirstArgumentIndentation:
   Enabled: false
 
 Layout/LineEndStringConcatenationIndentation:
-  EnforcedStyle: indented
+  Enabled: false
 
 Layout/LineLength:
   Max: 120
@@ -22,11 +22,7 @@ Layout/MultilineMethodCallIndentation:
   Enabled: false
 
 Layout/MultilineOperationIndentation:
-  EnforcedStyle: indented
-  # It doesn't seem to work well in our case, so we exclude a couple of false offenses
-  Exclude:
-    - "lib/organizer/creator.rb"
-    - "lib/twitter/rest_client.rb"
+  Enabled: false
 
 Layout/SpaceInsideStringInterpolation:
   Enabled: false

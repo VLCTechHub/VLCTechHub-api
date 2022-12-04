@@ -10,7 +10,11 @@ describe VLCTechHub::Organizer::Creator do
   let(:fake_twitter_user) do
     instance_double(
       ::Twitter::User,
-      name: 'a name', description: 'a description', profile_image_url: 'an url', website?: true, website: 'a website'
+      name: 'a name',
+      description: 'a description',
+      profile_image_url: 'an url',
+      website?: true,
+      website: 'a website'
     )
   end
 

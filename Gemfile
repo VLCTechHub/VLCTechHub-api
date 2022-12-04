@@ -16,7 +16,6 @@ gem 'ruby-clock', '~> 1.0.0'
 gem 'twitter', '~> 7.0.0'
 
 group :development, :test do
-  gem 'prettier', '~> 3.2.2', require: false
   gem 'pry', '~> 0.14.1'
   gem 'rack-test', '~> 2.0.2'
   gem 'rackup', '~> 0.2.3'
@@ -24,6 +23,7 @@ group :development, :test do
   gem 'rspec', '~> 3.12.0'
   gem 'rubocop', '~> 1.39.0', require: false
   gem 'rubocop-rspec', '~> 2.15.0', require: false
+  gem 'syntax_tree', '~> 5.0.1', require: false
 end
 
 group :production do

@@ -24,11 +24,11 @@ module VLCTechHub
           html_part do
             content_type 'text/html; charset=UTF-8'
             body "<h1>#{event['title']}</h1>" \
-              "<pre>#{event['description']}</pre>" \
-              "<h3>#{fmt_date}</h3>" \
-              "<p>Hashtag: #{event['hashtag']}</p>" \
-              "<p>Link: <a href='#{event['link']}'>#{event['link']}</a></p>" \
-              "<p><a href='#{publish_endpoint}/#{event['publish_id']}'>Publicar evento</a></p>"
+                   "<pre>#{event['description']}</pre>" \
+                   "<h3>#{fmt_date}</h3>" \
+                   "<p>Hashtag: #{event['hashtag']}</p>" \
+                   "<p>Link: <a href='#{event['link']}'>#{event['link']}</a></p>" \
+                   "<p><a href='#{publish_endpoint}/#{event['publish_id']}'>Publicar evento</a></p>"
           end
         end
       end
@@ -50,11 +50,11 @@ module VLCTechHub
           html_part do
             content_type 'text/html; charset=UTF-8'
             body "<h1>#{event['title']}</h1>" \
-              "<pre>#{event['description']}</pre>" \
-              "<h3>#{fmt_date}</h3>" \
-              "<p>Hashtag: #{event['hashtag']}</p>" \
-              "<p>Link: <a href='#{event['link']}'>#{event['link']}</a></p>" \
-              "<p><a href='#{approve_endpoint}/#{event['publish_id']}'>Aprobar evento</a></p>"
+                   "<pre>#{event['description']}</pre>" \
+                   "<h3>#{fmt_date}</h3>" \
+                   "<p>Hashtag: #{event['hashtag']}</p>" \
+                   "<p>Link: <a href='#{event['link']}'>#{event['link']}</a></p>" \
+                   "<p><a href='#{approve_endpoint}/#{event['publish_id']}'>Aprobar evento</a></p>"
           end
         end
       end
@@ -74,9 +74,9 @@ module VLCTechHub
           html_part do
             content_type 'text/html; charset=UTF-8'
             body "<h1>#{event['title']}</h1>" \
-              "<h3>#{fmt_date}</h3>" \
-              "<pre>#{event['description']}</pre>" \
-              "<p>Link: <a href='#{event['link']}'>#{event['link']}</a></p>"
+                   "<h3>#{fmt_date}</h3>" \
+                   "<pre>#{event['description']}</pre>" \
+                   "<p>Link: <a href='#{event['link']}'>#{event['link']}</a></p>"
           end
         end
       end

@@ -19,16 +19,16 @@ module VLCTechHub
           html_part do
             content_type 'text/html; charset=UTF-8'
             body "<h1>#{job['title']}</h1>" \
-              "<pre>#{job['description']}</pre>" \
-              "<p>Keywords: #{job['tags']}</p>" \
-              "<p>Company Name: #{job['company']['name']}</p>" \
-              "<p>Company Link: #{job['company']['link']}</p>" \
-              "<p>Company Twitter: #{job['company']['twitter']}</p>" \
-              "<p>Salary: #{job['salary']}</p>" \
-              "<p>How to apply: #{job['how_to_apply']}</p>" \
-              "<p>Contact: #{job['contact_email']}</p>" \
-              "<p>Link: <a href='#{job['link']}'>#{job['link']}</a></p>" \
-              "<p><a href='#{publish_endpoint}/#{job['publish_id']}'>Publicar Oferta</a></p>"
+                   "<pre>#{job['description']}</pre>" \
+                   "<p>Keywords: #{job['tags']}</p>" \
+                   "<p>Company Name: #{job['company']['name']}</p>" \
+                   "<p>Company Link: #{job['company']['link']}</p>" \
+                   "<p>Company Twitter: #{job['company']['twitter']}</p>" \
+                   "<p>Salary: #{job['salary']}</p>" \
+                   "<p>How to apply: #{job['how_to_apply']}</p>" \
+                   "<p>Contact: #{job['contact_email']}</p>" \
+                   "<p>Link: <a href='#{job['link']}'>#{job['link']}</a></p>" \
+                   "<p><a href='#{publish_endpoint}/#{job['publish_id']}'>Publicar Oferta</a></p>"
           end
         end
       end
@@ -46,16 +46,16 @@ module VLCTechHub
           html_part do
             content_type 'text/html; charset=UTF-8'
             body "<h1>#{job['title']}</h1>" \
-              "<pre>#{job['description']}</pre>" \
-              "<p>Keywords: #{job['tags']}</p>" \
-              "<p>Company Name: #{job['company']['name']}</p>" \
-              "<p>Company Link: #{job['company']['link']}</p>" \
-              "<p>Company Twitter: #{job['company']['twitter']}</p>" \
-              "<p>Salary: #{job['salary']}</p>" \
-              "<p>How to apply: #{job['how_to_apply']}</p>" \
-              "<p>Contact: #{job['contact_email']}</p>" \
-              "<p>Link: <a href='#{job['link']}'>#{job['link']}</a></p>" \
-              "<p><a href='#{approve_endpoint}/#{job['publish_id']}'>Publicar Oferta</a></p>"
+                   "<pre>#{job['description']}</pre>" \
+                   "<p>Keywords: #{job['tags']}</p>" \
+                   "<p>Company Name: #{job['company']['name']}</p>" \
+                   "<p>Company Link: #{job['company']['link']}</p>" \
+                   "<p>Company Twitter: #{job['company']['twitter']}</p>" \
+                   "<p>Salary: #{job['salary']}</p>" \
+                   "<p>How to apply: #{job['how_to_apply']}</p>" \
+                   "<p>Contact: #{job['contact_email']}</p>" \
+                   "<p>Link: <a href='#{job['link']}'>#{job['link']}</a></p>" \
+                   "<p><a href='#{approve_endpoint}/#{job['publish_id']}'>Publicar Oferta</a></p>"
           end
         end
       end
@@ -71,9 +71,9 @@ module VLCTechHub
           html_part do
             content_type 'text/html; charset=UTF-8'
             body "<h1>#{job['title']}</h1>" \
-              "<h3>#{job['company']['name']}</h3>" \
-              "<pre>#{job['description']}</pre>" \
-              "<p>Link: <a href='#{job['link']}'>#{job['link']}</a></p>"
+                   "<h3>#{job['company']['name']}</h3>" \
+                   "<pre>#{job['description']}</pre>" \
+                   "<p>Link: <a href='#{job['link']}'>#{job['link']}</a></p>"
           end
         end
       end

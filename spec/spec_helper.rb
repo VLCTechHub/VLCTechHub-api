@@ -47,7 +47,10 @@ def build(type, attrs = {})
       title: 'Title',
       description: 'Description',
       link: 'https://some.url/job',
-      company: { name: 'Name', link: 'https://some.url' },
+      company: {
+        name: 'Name',
+        link: 'https://some.url'
+      },
       tags: %w[a_tag another_tag],
       how_to_apply: 'Apply',
       contact_email: 'some@email.com',
@@ -64,8 +67,7 @@ def build(type, attrs = {})
     }
   else
     raise ArgumentError, "Unrecognized type '#{type}'"
-  end
-    .merge(attrs)
+  end.merge(attrs)
 end
 # rubocop:enable Metrics/MethodLength
 
@@ -79,9 +81,7 @@ def create(type, attrs = {})
     VLCTechHub::Organizer::Repository
   else
     raise ArgumentError, "Unrecognized type '#{type}'"
-  end
-    .new
-    .insert(build(type, attrs))
+  end.new.insert(build(type, attrs))
 end
 
 def build_list(type, size, attrs = {})

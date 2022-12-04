@@ -50,7 +50,9 @@ module VLCTechHub
             end
             requires :tags, type: Array, allow_blank: false, desc: 'The tags to categorize the job offer'
             requires :how_to_apply,
-                     type: String, allow_blank: false, desc: 'Description of the steps to apply to the job offer'
+                     type: String,
+                     allow_blank: false,
+                     desc: 'Description of the steps to apply to the job offer'
             requires :salary, type: String, allow_blank: false, desc: 'The job offer salary'
           end
           post do

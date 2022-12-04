@@ -9,7 +9,9 @@ describe VLCTechHub::Job::Mailer do
     {
       'title' => 'a title',
       'description' => 'a description',
-      'company' => { 'name' => 'canal cocina' },
+      'company' => {
+        'name' => 'canal cocina'
+      },
       'link' => 'http://anywhere.org',
       'contact_email' => 'pub@email.any'
     }

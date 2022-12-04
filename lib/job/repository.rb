@@ -13,9 +13,13 @@ module VLCTechHub
         month = DateTime.now
         previous_month = month.prev_month
         collection.find(
-          published: true, posted: true, tweeted: false, published_at: { '$gte' => previous_month.to_time.utc }
-        )
-          .sort(date: 1)
+          published: true,
+          posted: true,
+          tweeted: false,
+          published_at: {
+            '$gte' => previous_month.to_time.utc
+          }
+        ).sort(date: 1)
       end
 
       def insert(job)

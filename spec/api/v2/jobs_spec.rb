@@ -55,7 +55,10 @@ describe VLCTechHub::API::V2::Routes do
         title: 'Title',
         description: 'Description',
         link: 'Link',
-        company: { name: 'Name', link: 'Link' },
+        company: {
+          name: 'Name',
+          link: 'Link'
+        },
         tags: %w[a_tag another_tag],
         how_to_apply: 'mMre text',
         contact_email: 'Any email',

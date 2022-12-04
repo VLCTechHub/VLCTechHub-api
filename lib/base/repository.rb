@@ -17,7 +17,10 @@ module VLCTechHub
         result =
           collection.update_one(
             { published: false, publish_id: uuid },
-            '$set' => { published: true, published_at: DateTime.now }
+            '$set' => {
+              published: true,
+              published_at: DateTime.now
+            }
           )
 
         was_updated = (result.n == 1)
@@ -29,7 +32,10 @@ module VLCTechHub
         result =
           collection.update_one(
             { posted: false, publish_id: uuid },
-            '$set' => { posted: true, posted_at: DateTime.now }
+            '$set' => {
+              posted: true,
+              posted_at: DateTime.now
+            }
           )
 
         was_updated = (result.n == 1)
@@ -41,7 +47,10 @@ module VLCTechHub
         result =
           collection.update_one(
             { tweeted: false, publish_id: uuid },
-            '$set' => { tweeted: true, tweeted_at: DateTime.now }
+            '$set' => {
+              tweeted: true,
+              tweeted_at: DateTime.now
+            }
           )
 
         was_updated = (result.n == 1)
@@ -58,7 +67,10 @@ module VLCTechHub
         result =
           collection.update_one(
             { published: true, publish_id: uuid, secret: secret },
-            '$set' => { published: false, published_at: nil }
+            '$set' => {
+              published: false,
+              published_at: nil
+            }
           )
 
         was_updated = (result.n == 1)
