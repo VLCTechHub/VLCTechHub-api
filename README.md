@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/VLCTechHub/VLCTechHub-api.svg?branch=master)](https://travis-ci.org/VLCTechHub/VLCTechHub-api)
+[![Lint Status](https://github.com/VLCTechHub/VLCTechHub-api/actions/workflows/lint.yml/badge.svg)](https://github.com/VLCTechHub/VLCTechHub-api/actions/workflows/lint.yml)
+[![Test Status](https://github.com/VLCTechHub/VLCTechHub-api/actions/workflows/test.yml/badge.svg)](https://github.com/VLCTechHub/VLCTechHub-api/actions/workflows/test.yml)
 
 # VLCTechHub API
 
