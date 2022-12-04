@@ -13,7 +13,9 @@ jobs:
         with:
           ruby-version: 3.1.3
       - name: Set up Rubocop
-        run: gem install rubocop rubocop-rspec
+        run: gem install rubocop -v '~> 1.39.0'
+      - name: Set up Rubocop Rspec extension
+        run: gem install rubocop-rspec -v '~> 2.15.0'
       - name: Run Rubocop checks
         run: rubocop .
 
@@ -27,6 +29,6 @@ jobs:
         with:
           ruby-version: 3.1.3
       - name: Set up SyntaxTree
-        run: gem install syntax_tree
+        run: gem install syntax_tree -v '~> 5.0.1'
       - name: Run SyntaxTree checks
         run: stree check '**/*.rb' '**/*.ru' Rakefile Gemfile Clockfile
